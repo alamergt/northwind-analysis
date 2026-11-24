@@ -1,6 +1,6 @@
 # Northwind Analysis Plan
 
-**Status:** Revision 3. Gates 0–5 approved; gate 6 (verification and pre-publication) under review.
+**Status:** Revision 3. Gates 0–6 approved. Gate 7 done: published at https://alamergt.github.io/northwind-analysis/ (repository https://github.com/alamergt/northwind-analysis); awaiting the owner's private-window check.
 **Input:** `Northwind Database.xlsx` (8 sheets, read-only)
 **Audience:** a manager who wants to understand the organization and act on the findings
 **Deliverables:**

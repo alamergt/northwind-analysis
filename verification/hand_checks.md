@@ -14,7 +14,21 @@ To repeat a check in Excel: filter `Orders Details` by `OrderID` (or `Orders` by
 | 6 | Germany, Q1 1998 net revenue (customer country) | **$54,893.31** | $54,893.3 (`q1_quarterly.csv`, 6 significant digits) | Yes |
 | 7 | United Package, shipped orders and freight (largest raw freight gap in Q3) | **315 orders, $27,556.76** | 315 orders, $27,556.76 | Yes |
 
-## Public site check in a private window (gate 7, to be completed by you)
+## Publication checks (gate 7, 24 November 2026)
+
+**Automated, as an anonymous visitor** (`verification/check_public_site.py`, results in `outputs/verification/public_site.json`): 6 of 6 pass.
+- The page https://alamergt.github.io/northwind-analysis/ returns 200 over HTTPS.
+- The served page is byte-for-byte identical to `docs/index.html`.
+- The three questions and the appendix are present.
+- The repository page and raw README return 200 without signing in, and the GitHub API reports the repository as public.
+
+**Fresh-clone reproduction:** an anonymous HTTPS clone into an empty folder, a new virtual environment and `pip install -r requirements.txt`, then 172 of 172 tests pass, 247 of 247 SQL cross-checks match, the rebuilt page matches the committed one, and every output table is byte-identical.
+
+**CI on Linux (GitHub Actions):** tests, the full rebuild and the page comparison pass. The first run differed only in the Python patch version printed in the footer, so the footer now shows major.minor.
+
+**Cookie-free browser check:** the live page loaded with no cookies, all 3 question sections and 8 charts present, and the repository link working.
+
+## Public site check in a private window (to be completed by the repository owner)
 
 Open the page URL and the repository URL in a private / incognito window with no sign-ins, and tick each:
 
