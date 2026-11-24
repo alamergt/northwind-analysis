@@ -766,7 +766,7 @@ def build_context(q1, q2, q3, charts, checks, config, input_sha256):
         "cutoff": config.cutoff.strftime("%d %B %Y").lstrip("0"),
         "built_at": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
         "input_sha256": input_sha256,
-        "python": sys.version.split()[0],
+        "python": f"{sys.version_info.major}.{sys.version_info.minor}",  # patch version varies by machine
         "versions": versions,
         "repo_url": config.repo_url,
         "summary": summary,

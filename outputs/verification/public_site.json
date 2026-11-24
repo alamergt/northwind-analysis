@@ -1,0 +1,36 @@
+{
+  "checked_at_utc": "2026-11-24T19:12:19+00:00",
+  "page": "https://alamergt.github.io/northwind-analysis/",
+  "results": [
+    {
+      "check": "page returns 200 over HTTPS",
+      "pass": true,
+      "detail": "200 https://alamergt.github.io/northwind-analysis/"
+    },
+    {
+      "check": "served page identical to docs/index.html",
+      "pass": true,
+      "detail": "served 34899e1c7f8f2ee0\u2026 local 34899e1c7f8f2ee0\u2026"
+    },
+    {
+      "check": "page has the three questions and the appendix",
+      "pass": true,
+      "detail": "all present"
+    },
+    {
+      "check": "repository page returns 200 without sign-in",
+      "pass": true,
+      "detail": "200"
+    },
+    {
+      "check": "raw README returns 200 without sign-in",
+      "pass": true,
+      "detail": "200"
+    },
+    {
+      "check": "GitHub API reports the repository as public",
+      "pass": true,
+      "detail": "200, private=False"
+    }
+  ]
+}
