@@ -1,0 +1,1731 @@
+[
+  {
+    "check": "order_lines",
+    "sql": 2155,
+    "pandas": 2155,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "orders",
+    "sql": 830,
+    "pandas": 830,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "orders_shipped",
+    "sql": 809,
+    "pandas": 809,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "orders_late",
+    "sql": 37,
+    "pandas": 37,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "customers_with_orders",
+    "sql": 89,
+    "pandas": 89,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "active_products",
+    "sql": 69,
+    "pandas": 69,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "active_without_reorder_rule",
+    "sql": 16,
+    "pandas": 16,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "net_revenue",
+    "sql": 1265793.0395,
+    "pandas": 1265793.0395,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "gross_revenue",
+    "sql": 1354458.59,
+    "pandas": 1354458.59,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "net_revenue quarter=1996Q3",
+    "sql": 79728.56999999999,
+    "pandas": 79728.57,
+    "abs_diff": 1.4551915228366852e-11,
+    "pass": true
+  },
+  {
+    "check": "net_revenue quarter=1996Q4",
+    "sql": 128355.4,
+    "pandas": 128355.40000000001,
+    "abs_diff": 1.4551915228366852e-11,
+    "pass": true
+  },
+  {
+    "check": "net_revenue quarter=1997Q1",
+    "sql": 138288.925,
+    "pandas": 138288.925,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "net_revenue quarter=1997Q2",
+    "sql": 143177.045,
+    "pandas": 143177.04499999998,
+    "abs_diff": 2.9103830456733704e-11,
+    "pass": true
+  },
+  {
+    "check": "net_revenue quarter=1997Q3",
+    "sql": 153937.77,
+    "pandas": 153937.77000000002,
+    "abs_diff": 2.9103830456733704e-11,
+    "pass": true
+  },
+  {
+    "check": "net_revenue quarter=1997Q4",
+    "sql": 181681.4635,
+    "pandas": 181681.4635,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "net_revenue quarter=1998Q1",
+    "sql": 298491.553,
+    "pandas": 298491.55299999996,
+    "abs_diff": 5.820766091346741e-11,
+    "pass": true
+  },
+  {
+    "check": "net_revenue quarter=1998Q2",
+    "sql": 142132.313,
+    "pandas": 142132.313,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "net_revenue country=Argentina",
+    "sql": 8119.1,
+    "pandas": 8119.1,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "net_revenue country=Austria",
+    "sql": 128003.8385,
+    "pandas": 128003.8385,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "net_revenue country=Belgium",
+    "sql": 33824.855,
+    "pandas": 33824.855,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "net_revenue country=Brazil",
+    "sql": 108789.1765,
+    "pandas": 108789.1765,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "net_revenue country=Canada",
+    "sql": 50196.29,
+    "pandas": 50196.29,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "net_revenue country=Denmark",
+    "sql": 32661.0225,
+    "pandas": 32661.0225,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "net_revenue country=Finland",
+    "sql": 19250.0525,
+    "pandas": 19250.0525,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "net_revenue country=France",
+    "sql": 80918.3225,
+    "pandas": 80918.3225,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "net_revenue country=Germany",
+    "sql": 226916.5835,
+    "pandas": 226916.5835,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "net_revenue country=Ireland",
+    "sql": 49979.905,
+    "pandas": 49979.905,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "net_revenue country=Italy",
+    "sql": 15770.155,
+    "pandas": 15770.155,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "net_revenue country=Mexico",
+    "sql": 23582.0775,
+    "pandas": 23582.0775,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "net_revenue country=Norway",
+    "sql": 5735.15,
+    "pandas": 5735.150000000001,
+    "abs_diff": 9.094947017729282e-13,
+    "pass": true
+  },
+  {
+    "check": "net_revenue country=Poland",
+    "sql": 3531.95,
+    "pandas": 3531.95,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "net_revenue country=Portugal",
+    "sql": 12883.3625,
+    "pandas": 12883.3625,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "net_revenue country=Spain",
+    "sql": 17983.2,
+    "pandas": 17983.2,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "net_revenue country=Sweden",
+    "sql": 54495.14,
+    "pandas": 54495.14,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "net_revenue country=Switzerland",
+    "sql": 31692.659,
+    "pandas": 31692.659,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "net_revenue country=UK",
+    "sql": 58971.31,
+    "pandas": 58971.31,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "net_revenue country=USA",
+    "sql": 245678.2605,
+    "pandas": 245678.2605,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "net_revenue country=Venezuela",
+    "sql": 56810.629,
+    "pandas": 56810.629,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q1 prior revenue Brazil",
+    "sql": 20524.420000000002,
+    "pandas": 20524.420000000002,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q1 current revenue Brazil",
+    "sql": 51736.339,
+    "pandas": 51736.339,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q1 growth Brazil",
+    "sql": 1.5207211214738345,
+    "pandas": 1.5207211214738343,
+    "abs_diff": 2.220446049250313e-16,
+    "pass": true
+  },
+  {
+    "check": "Q1 relative growth Brazil",
+    "sql": 0.39977874401993496,
+    "pandas": 0.39977874401993474,
+    "abs_diff": 2.220446049250313e-16,
+    "pass": true
+  },
+  {
+    "check": "Q1 prior revenue Central Europe",
+    "sql": 43246.26,
+    "pandas": 43246.259999999995,
+    "abs_diff": 7.275957614183426e-12,
+    "pass": true
+  },
+  {
+    "check": "Q1 current revenue Central Europe",
+    "sql": 66879.1125,
+    "pandas": 66879.1125,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q1 growth Central Europe",
+    "sql": 0.5464715908381441,
+    "pandas": 0.5464715908381444,
+    "abs_diff": 3.3306690738754696e-16,
+    "pass": true
+  },
+  {
+    "check": "Q1 relative growth Central Europe",
+    "sql": -0.14123064124592866,
+    "pandas": -0.14123064124592866,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q1 prior revenue France",
+    "sql": 26155.54,
+    "pandas": 26155.54,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q1 current revenue France",
+    "sql": 29569.7025,
+    "pandas": 29569.702500000003,
+    "abs_diff": 3.637978807091713e-12,
+    "pass": true
+  },
+  {
+    "check": "Q1 growth France",
+    "sql": 0.1305330534181286,
+    "pandas": 0.1305330534181287,
+    "abs_diff": 1.1102230246251565e-16,
+    "pass": true
+  },
+  {
+    "check": "Q1 relative growth France",
+    "sql": -0.37220499161708764,
+    "pandas": -0.37220499161708764,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q1 prior revenue Germany",
+    "sql": 28361.38,
+    "pandas": 28361.379999999997,
+    "abs_diff": 3.637978807091713e-12,
+    "pass": true
+  },
+  {
+    "check": "Q1 current revenue Germany",
+    "sql": 94691.111,
+    "pandas": 94691.111,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q1 growth Germany",
+    "sql": 2.338734257641906,
+    "pandas": 2.338734257641906,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q1 relative growth Germany",
+    "sql": 0.8540286769389969,
+    "pandas": 0.8540286769389966,
+    "abs_diff": 2.220446049250313e-16,
+    "pass": true
+  },
+  {
+    "check": "Q1 prior revenue Nordics",
+    "sql": 29081.62,
+    "pandas": 29081.619999999995,
+    "abs_diff": 3.637978807091713e-12,
+    "pass": true
+  },
+  {
+    "check": "Q1 current revenue Nordics",
+    "sql": 41533.5725,
+    "pandas": 41533.5725,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q1 growth Nordics",
+    "sql": 0.42817258804702085,
+    "pandas": 0.4281725880470211,
+    "abs_diff": 2.220446049250313e-16,
+    "pass": true
+  },
+  {
+    "check": "Q1 relative growth Nordics",
+    "sql": -0.206923124295759,
+    "pandas": -0.2069231242957591,
+    "abs_diff": 1.1102230246251565e-16,
+    "pass": true
+  },
+  {
+    "check": "Q1 prior revenue Other North America",
+    "sql": 24830.59,
+    "pandas": 24830.590000000004,
+    "abs_diff": 3.637978807091713e-12,
+    "pass": true
+  },
+  {
+    "check": "Q1 current revenue Other North America",
+    "sql": 15578.725,
+    "pandas": 15578.724999999999,
+    "abs_diff": 1.8189894035458565e-12,
+    "pass": true
+  },
+  {
+    "check": "Q1 growth Other North America",
+    "sql": -0.3725994831375332,
+    "pandas": -0.3725994831375333,
+    "abs_diff": 1.1102230246251565e-16,
+    "pass": true
+  },
+  {
+    "check": "Q1 relative growth Other North America",
+    "sql": -0.6515989412673638,
+    "pandas": -0.651598941267364,
+    "abs_diff": 1.1102230246251565e-16,
+    "pass": true
+  },
+  {
+    "check": "Q1 prior revenue Other South America",
+    "sql": 13952.58,
+    "pandas": 13952.580000000002,
+    "abs_diff": 1.8189894035458565e-12,
+    "pass": true
+  },
+  {
+    "check": "Q1 current revenue Other South America",
+    "sql": 26170.299,
+    "pandas": 26170.299,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q1 growth Other South America",
+    "sql": 0.875660200479051,
+    "pandas": 0.8756602004790509,
+    "abs_diff": 1.1102230246251565e-16,
+    "pass": true
+  },
+  {
+    "check": "Q1 relative growth Other South America",
+    "sql": 0.041570706599880936,
+    "pandas": 0.04157070659988049,
+    "abs_diff": 4.440892098500626e-16,
+    "pass": true
+  },
+  {
+    "check": "Q1 prior revenue Southern Europe",
+    "sql": 9626.015,
+    "pandas": 9626.015,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q1 current revenue Southern Europe",
+    "sql": 19350.75,
+    "pandas": 19350.75,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q1 growth Southern Europe",
+    "sql": 1.0102555418831156,
+    "pandas": 1.0102555418831158,
+    "abs_diff": 2.220446049250313e-16,
+    "pass": true
+  },
+  {
+    "check": "Q1 relative growth Southern Europe",
+    "sql": 0.11631269068392691,
+    "pandas": 0.11631269068392669,
+    "abs_diff": 2.220446049250313e-16,
+    "pass": true
+  },
+  {
+    "check": "Q1 prior revenue UK & Ireland",
+    "sql": 21674.935,
+    "pandas": 21674.935,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q1 current revenue UK & Ireland",
+    "sql": 48253.735,
+    "pandas": 48253.735,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q1 growth UK & Ireland",
+    "sql": 1.2262458918561925,
+    "pandas": 1.2262458918561923,
+    "abs_diff": 2.220446049250313e-16,
+    "pass": true
+  },
+  {
+    "check": "Q1 relative growth UK & Ireland",
+    "sql": 0.2362540432715412,
+    "pandas": 0.23625404327154098,
+    "abs_diff": 2.220446049250313e-16,
+    "pass": true
+  },
+  {
+    "check": "Q1 prior revenue USA",
+    "sql": 49190.985,
+    "pandas": 49190.985,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q1 current revenue USA",
+    "sql": 86409.67,
+    "pandas": 86409.67,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q1 growth USA",
+    "sql": 0.7566159734349698,
+    "pandas": 0.7566159734349698,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q1 relative growth USA",
+    "sql": -0.024535606071930505,
+    "pandas": -0.024535606071930727,
+    "abs_diff": 2.220446049250313e-16,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 38",
+    "sql": 43.96888888888889,
+    "pandas": 43.96888888888889,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 38",
+    "sql": "Critical",
+    "pandas": "Critical",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 60",
+    "sql": 130.55377777777778,
+    "pandas": 130.55377777777778,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 60",
+    "sql": "Critical",
+    "pandas": "Critical",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 7",
+    "sql": 131.56844444444445,
+    "pandas": 131.56844444444445,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 7",
+    "sql": "Critical",
+    "pandas": "Critical",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 51",
+    "sql": 70.012,
+    "pandas": 70.012,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 51",
+    "sql": "Critical",
+    "pandas": "Critical",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 62",
+    "sql": 77.79111111111112,
+    "pandas": 77.79111111111112,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 62",
+    "sql": "Critical",
+    "pandas": "Critical",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 63",
+    "sql": 49.71866666666667,
+    "pandas": 49.71866666666667,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 63",
+    "sql": "Critical",
+    "pandas": "Critical",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 71",
+    "sql": 97.06977777777779,
+    "pandas": 97.06977777777779,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 71",
+    "sql": "Critical",
+    "pandas": "Critical",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 72",
+    "sql": 46.67466666666667,
+    "pandas": 46.67466666666667,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 72",
+    "sql": "Critical",
+    "pandas": "Critical",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 16",
+    "sql": 92.33466666666668,
+    "pandas": 92.33466666666668,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 16",
+    "sql": "Critical",
+    "pandas": "Critical",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 1",
+    "sql": 86.24666666666667,
+    "pandas": 86.24666666666667,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 1",
+    "sql": "Critical",
+    "pandas": "Critical",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 8",
+    "sql": 33.14577777777778,
+    "pandas": 33.14577777777778,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 8",
+    "sql": "Critical",
+    "pandas": "Critical",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 30",
+    "sql": 45.998222222222225,
+    "pandas": 45.998222222222225,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 30",
+    "sql": "Critical",
+    "pandas": "Critical",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 13",
+    "sql": 192.11022222222223,
+    "pandas": 192.11022222222223,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 13",
+    "sql": "Critical",
+    "pandas": "Critical",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 77",
+    "sql": 82.52622222222223,
+    "pandas": 82.52622222222223,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 77",
+    "sql": "Critical",
+    "pandas": "Critical",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 21",
+    "sql": 105.18711111111111,
+    "pandas": 105.18711111111111,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 21",
+    "sql": "Critical",
+    "pandas": "Critical",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 35",
+    "sql": 56.483111111111114,
+    "pandas": 56.483111111111114,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 35",
+    "sql": "Critical",
+    "pandas": "Critical",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 31",
+    "sql": 75.42355555555555,
+    "pandas": 75.42355555555555,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 31",
+    "sql": "Critical",
+    "pandas": "Critical",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 68",
+    "sql": 73.39422222222223,
+    "pandas": 73.39422222222223,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 68",
+    "sql": "Critical",
+    "pandas": "Critical",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 70",
+    "sql": 51.40977777777778,
+    "pandas": 51.40977777777778,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 70",
+    "sql": "Critical",
+    "pandas": "Critical",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 19",
+    "sql": 65.27688888888889,
+    "pandas": 65.27688888888889,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 19",
+    "sql": "Critical",
+    "pandas": "Critical",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 59",
+    "sql": 123.78933333333335,
+    "pandas": 123.78933333333335,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 59",
+    "sql": "High",
+    "pandas": "High",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 43",
+    "sql": 49.04222222222222,
+    "pandas": 49.04222222222222,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 43",
+    "sql": "High",
+    "pandas": "High",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 10",
+    "sql": 60.879999999999995,
+    "pandas": 60.879999999999995,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 10",
+    "sql": "High",
+    "pandas": "High",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 76",
+    "sql": 100.452,
+    "pandas": 100.452,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 76",
+    "sql": "High",
+    "pandas": "High",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 2",
+    "sql": 105.86355555555556,
+    "pandas": 105.86355555555556,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 2",
+    "sql": "High",
+    "pandas": "High",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 69",
+    "sql": 45.660000000000004,
+    "pandas": 45.660000000000004,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 69",
+    "sql": "High",
+    "pandas": "High",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 56",
+    "sql": 31.116444444444443,
+    "pandas": 31.116444444444443,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 56",
+    "sql": "High",
+    "pandas": "High",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 75",
+    "sql": 130.21555555555554,
+    "pandas": 130.21555555555554,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 75",
+    "sql": "High",
+    "pandas": "High",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 26",
+    "sql": 29.087111111111113,
+    "pandas": 29.087111111111113,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 26",
+    "sql": "High",
+    "pandas": "High",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 41",
+    "sql": 89.96711111111111,
+    "pandas": 89.96711111111111,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 41",
+    "sql": "High",
+    "pandas": "High",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 57",
+    "sql": 38.21911111111111,
+    "pandas": 38.21911111111111,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 57",
+    "sql": "High",
+    "pandas": "High",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 54",
+    "sql": 24.352000000000004,
+    "pandas": 24.352000000000004,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 54",
+    "sql": "High",
+    "pandas": "High",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 20",
+    "sql": 35.85155555555556,
+    "pandas": 35.85155555555556,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 20",
+    "sql": "Watch",
+    "pandas": "Watch",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 64",
+    "sql": 70.68844444444444,
+    "pandas": 70.68844444444444,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 64",
+    "sql": "Watch",
+    "pandas": "Watch",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 18",
+    "sql": 32.46933333333334,
+    "pandas": 32.46933333333334,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 18",
+    "sql": "Watch",
+    "pandas": "Watch",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 32",
+    "sql": 42.95422222222222,
+    "pandas": 42.95422222222222,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 32",
+    "sql": "Watch",
+    "pandas": "Watch",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 49",
+    "sql": 59.18888888888889,
+    "pandas": 59.18888888888889,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 49",
+    "sql": "Watch",
+    "pandas": "Watch",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 34",
+    "sql": 82.86444444444444,
+    "pandas": 82.86444444444444,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 34",
+    "sql": "Watch",
+    "pandas": "Watch",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 11",
+    "sql": 51.40977777777778,
+    "pandas": 51.40977777777778,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 11",
+    "sql": "Watch",
+    "pandas": "Watch",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 45",
+    "sql": 21.984444444444446,
+    "pandas": 21.984444444444446,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 45",
+    "sql": "Watch",
+    "pandas": "Watch",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 3",
+    "sql": 9.808444444444444,
+    "pandas": 9.808444444444444,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 3",
+    "sql": "Watch",
+    "pandas": "Watch",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 37",
+    "sql": 2.705777777777778,
+    "pandas": 2.705777777777778,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 37",
+    "sql": "Watch",
+    "pandas": "Watch",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 74",
+    "sql": 6.764444444444445,
+    "pandas": 6.764444444444445,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 74",
+    "sql": "Watch",
+    "pandas": "Watch",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 66",
+    "sql": 0.33822222222222226,
+    "pandas": 0.33822222222222226,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 66",
+    "sql": "Watch",
+    "pandas": "Watch",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 55",
+    "sql": 83.20266666666667,
+    "pandas": 83.20266666666667,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 55",
+    "sql": "OK",
+    "pandas": "OK",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 61",
+    "sql": 59.86533333333333,
+    "pandas": 59.86533333333333,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 61",
+    "sql": "OK",
+    "pandas": "OK",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 12",
+    "sql": 32.46933333333334,
+    "pandas": 32.46933333333334,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 12",
+    "sql": "OK",
+    "pandas": "OK",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 40",
+    "sql": 63.58577777777778,
+    "pandas": 63.58577777777778,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 40",
+    "sql": "OK",
+    "pandas": "OK",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 36",
+    "sql": 62.23288888888889,
+    "pandas": 62.23288888888889,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 36",
+    "sql": "OK",
+    "pandas": "OK",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 6",
+    "sql": 36.86622222222222,
+    "pandas": 36.86622222222222,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 6",
+    "sql": "OK",
+    "pandas": "OK",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 27",
+    "sql": 18.602222222222224,
+    "pandas": 18.602222222222224,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 27",
+    "sql": "OK",
+    "pandas": "OK",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 39",
+    "sql": 35.513333333333335,
+    "pandas": 35.513333333333335,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 39",
+    "sql": "OK",
+    "pandas": "OK",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 46",
+    "sql": 42.616,
+    "pandas": 42.616,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 46",
+    "sql": "OK",
+    "pandas": "OK",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 65",
+    "sql": 21.646222222222224,
+    "pandas": 21.646222222222224,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 65",
+    "sql": "OK",
+    "pandas": "OK",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 67",
+    "sql": 33.484,
+    "pandas": 33.484,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 67",
+    "sql": "OK",
+    "pandas": "OK",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 58",
+    "sql": 33.82222222222222,
+    "pandas": 33.82222222222222,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 58",
+    "sql": "OK",
+    "pandas": "OK",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 4",
+    "sql": 20.631555555555558,
+    "pandas": 20.631555555555558,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 4",
+    "sql": "OK",
+    "pandas": "OK",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 22",
+    "sql": 15.558222222222222,
+    "pandas": 15.558222222222222,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 22",
+    "sql": "OK",
+    "pandas": "OK",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 50",
+    "sql": 18.602222222222224,
+    "pandas": 18.602222222222224,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 50",
+    "sql": "OK",
+    "pandas": "OK",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 44",
+    "sql": 17.249333333333333,
+    "pandas": 17.249333333333333,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 44",
+    "sql": "OK",
+    "pandas": "OK",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 52",
+    "sql": 37.54266666666667,
+    "pandas": 37.54266666666667,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 52",
+    "sql": "OK",
+    "pandas": "OK",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 47",
+    "sql": 23.675555555555558,
+    "pandas": 23.675555555555558,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 47",
+    "sql": "OK",
+    "pandas": "OK",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 25",
+    "sql": 14.88177777777778,
+    "pandas": 14.88177777777778,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 25",
+    "sql": "OK",
+    "pandas": "OK",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 23",
+    "sql": 16.91111111111111,
+    "pandas": 16.91111111111111,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 23",
+    "sql": "OK",
+    "pandas": "OK",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 14",
+    "sql": 7.102666666666667,
+    "pandas": 7.102666666666667,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 14",
+    "sql": "OK",
+    "pandas": "OK",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 33",
+    "sql": 49.71866666666667,
+    "pandas": 49.71866666666667,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 33",
+    "sql": "OK",
+    "pandas": "OK",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 73",
+    "sql": 4.058666666666667,
+    "pandas": 4.058666666666667,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 73",
+    "sql": "OK",
+    "pandas": "OK",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 48",
+    "sql": 0.0,
+    "pandas": 0.0,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 48",
+    "sql": "No recent demand",
+    "pandas": "No recent demand",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 recent demand product 15",
+    "sql": 0.0,
+    "pandas": 0.0,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q2 tier product 15",
+    "sql": "No recent demand",
+    "pandas": "No recent demand",
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q2 every active product has the same tier",
+    "sql": 69,
+    "pandas": 69,
+    "abs_diff": 0,
+    "pass": true
+  },
+  {
+    "check": "Q3 median days Large / Federal Shipping",
+    "sql": 7.0,
+    "pandas": 7.0,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q3 median days Large / Speedy Express",
+    "sql": 7.0,
+    "pandas": 7.0,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q3 median days Large / United Package",
+    "sql": 7.0,
+    "pandas": 7.0,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q3 median days Medium / Federal Shipping",
+    "sql": 6.0,
+    "pandas": 6.0,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q3 median days Medium / Speedy Express",
+    "sql": 7.0,
+    "pandas": 7.0,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q3 median days Medium / United Package",
+    "sql": 7.0,
+    "pandas": 7.0,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q3 median days Small / Federal Shipping",
+    "sql": 7.0,
+    "pandas": 7.0,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q3 median days Small / Speedy Express",
+    "sql": 8.0,
+    "pandas": 8.0,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q3 median days Small / United Package",
+    "sql": 7.0,
+    "pandas": 7.0,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q3 median days Very large / Federal Shipping",
+    "sql": 6.0,
+    "pandas": 6.0,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q3 median days Very large / Speedy Express",
+    "sql": 6.0,
+    "pandas": 6.0,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q3 median days Very large / United Package",
+    "sql": 7.0,
+    "pandas": 7.0,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q3 processing opportunity Federal Shipping",
+    "sql": 0,
+    "pandas": 0.0,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q3 processing opportunity Speedy Express",
+    "sql": 246.68852459016392,
+    "pandas": 246.68852459016392,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q3 processing opportunity United Package",
+    "sql": 502.0856210749531,
+    "pandas": 502.0856210749531,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q3 median fpu Large / Federal Shipping",
+    "sql": 0.7952112676056338,
+    "pandas": 0.7952112676056338,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q3 median fpu Large / Speedy Express",
+    "sql": 0.9091552706552706,
+    "pandas": 0.9091552706552706,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q3 median fpu Large / United Package",
+    "sql": 0.9352727272727273,
+    "pandas": 0.9352727272727273,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q3 median fpu Medium / Federal Shipping",
+    "sql": 0.9723333333333334,
+    "pandas": 0.9723333333333334,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q3 median fpu Medium / Speedy Express",
+    "sql": 0.8824,
+    "pandas": 0.8824,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q3 median fpu Medium / United Package",
+    "sql": 0.9210666666666667,
+    "pandas": 0.9210666666666667,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q3 median fpu Small / Federal Shipping",
+    "sql": 0.795,
+    "pandas": 0.795,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q3 median fpu Small / Speedy Express",
+    "sql": 0.8476,
+    "pandas": 0.8476,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q3 median fpu Small / United Package",
+    "sql": 0.7345238095238096,
+    "pandas": 0.7345238095238096,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q3 median fpu Very large / Federal Shipping",
+    "sql": 1.066267264178666,
+    "pandas": 1.066267264178666,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q3 median fpu Very large / Speedy Express",
+    "sql": 0.916860465116279,
+    "pandas": 0.916860465116279,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q3 median fpu Very large / United Package",
+    "sql": 1.254052197802198,
+    "pandas": 1.254052197802198,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q3 freight opportunity Federal Shipping",
+    "sql": 3110.409355273466,
+    "pandas": 3110.409355273466,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q3 freight opportunity Speedy Express",
+    "sql": 0,
+    "pandas": 0.0,
+    "abs_diff": 0.0,
+    "pass": true
+  },
+  {
+    "check": "Q3 freight opportunity United Package",
+    "sql": 6617.9325116741875,
+    "pandas": 6617.932511674187,
+    "abs_diff": 9.094947017729282e-13,
+    "pass": true
+  }
+]

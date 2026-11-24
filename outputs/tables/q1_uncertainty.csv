@@ -1,0 +1,11 @@
+Market,RelativeGrowth,Low,High,Performance,CrossesThreshold
+Germany,0.854029,0.0428479,2.3605,Outperforming,True
+Brazil,0.399779,-0.400149,2.96961,Outperforming,True
+UK & Ireland,0.236254,-0.36754,1.53478,Outperforming,True
+Southern Europe,0.116313,-0.483992,1.4399,In line,True
+Other South America,0.0415707,-0.486465,1.46407,In line,True
+USA,-0.0245356,-0.414096,0.830634,In line,True
+Central Europe,-0.141231,-0.504407,0.66743,Underperforming,True
+Nordics,-0.206923,-0.60924,0.992314,Underperforming,True
+France,-0.372205,-0.673615,0.398919,Underperforming,True
+Other North America,-0.651599,-0.863827,-0.0314871,Underperforming,True

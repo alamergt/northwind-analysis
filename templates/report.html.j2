@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ title }}</title>
+<meta name="description" content="Analysis of the Northwind sample database: market performance, restocking priorities and logistics efficiency, with reproducible Python code.">
+<style>
+:root {
+  color-scheme: light;
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --page: #f9f9f7; --card: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --muted: #6f6e69;
+  --line: #e1e0d9; --accent: #2a78d6; --accent-soft: #edf4fd; --action: #0f7a55; --action-soft: #eef8f3;
+  --note-bg: #f0efec; --link: #1c5cab;
+  --chart-surface: #fcfcfb; --grid: #e1e0d9; --axis: #c3c2b7; --band: #efeee9;
+  --series-1: #2a78d6; --series-2: #eb6834; --series-3: #1baf7a; --negative: #e34948;
+  --neutral-mark: #a9a8a1;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --page: #0d0d0d; --card: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #a3a29b;
+    --line: #2c2c2a; --accent: #3987e5; --accent-soft: #15243a; --action: #4cc495; --action-soft: #132a21;
+    --note-bg: #242422; --link: #86b6ef;
+    --chart-surface: #1a1a19; --grid: #2c2c2a; --axis: #4a4a46; --band: #2a2a28;
+    --series-1: #3987e5; --series-2: #d95926; --series-3: #199e70; --negative: #e66767;
+    --neutral-mark: #c3c2b7;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0d0d0d; --card: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #a3a29b;
+  --line: #2c2c2a; --accent: #3987e5; --accent-soft: #15243a; --action: #4cc495; --action-soft: #132a21;
+  --note-bg: #242422; --link: #86b6ef;
+  --chart-surface: #1a1a19; --grid: #2c2c2a; --axis: #4a4a46; --band: #2a2a28;
+  --series-1: #3987e5; --series-2: #d95926; --series-3: #199e70; --negative: #e66767;
+  --neutral-mark: #c3c2b7;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink); font: 17px/1.6 var(--font-sans); }
+main { max-width: 880px; margin: 0 auto; padding: 56px 16px 96px; }
+a { color: var(--link); }
+p { margin: 0 0 16px; }
+
+/* Hierarchy */
+.eyebrow { text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.75rem; color: var(--muted); font-weight: 600; margin: 0 0 8px; }
+h1 { font-size: clamp(2rem, 5vw, 2.6rem); line-height: 1.15; margin: 0 0 16px; letter-spacing: -0.02em; }
+h2 { font-size: clamp(1.4rem, 3.4vw, 1.75rem); line-height: 1.25; margin: 0 0 16px; letter-spacing: -0.01em; }
+h3 { font-size: 1.05rem; margin: 0 0 8px; }
+.lede { font-size: 1.12rem; color: var(--ink-2); max-width: 62ch; }
+.meta { color: var(--muted); font-size: 0.85rem; }
+header { margin-bottom: 48px; }
+
+/* At a glance */
+.glance { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); margin: 0 0 72px; }
+.glance article { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 24px; display: flex; flex-direction: column; }
+.glance h3 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 12px; }
+.glance p { font-size: 0.98rem; }
+.glance ul { margin: 0 0 16px; padding-left: 18px; font-size: 0.92rem; color: var(--ink-2); }
+.glance a { margin-top: auto; font-size: 0.9rem; font-weight: 600; text-decoration: none; }
+
+/* Question sections */
+section.question { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 40px; margin: 0 0 56px; }
+.why { color: var(--ink-2); max-width: 64ch; margin-bottom: 28px; }
+.callout { border-radius: 12px; padding: 20px 24px; margin: 0 0 32px; }
+.callout .label { display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; margin-bottom: 6px; }
+.finding { background: var(--accent-soft); border-left: 4px solid var(--accent); }
+.finding .label { color: var(--accent); }
+.finding p { font-size: 1.15rem; line-height: 1.5; margin: 0; font-weight: 500; }
+.meaning { margin: 8px 0 28px; }
+.meaning .label { display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
+.meaning p { margin: 0; }
+.action { background: var(--action-soft); border-left: 4px solid var(--action); }
+.action .label { color: var(--action); }
+.action ul { margin: 0; padding-left: 20px; }
+.action li { margin: 4px 0; font-weight: 500; }
+
+/* Charts */
+figure { margin: 8px 0 32px; }
+.chart-title { font-size: 1rem; margin: 0 0 12px; }
+.chart { overflow-x: auto; }
+.chart svg { display: block; width: 100%; min-width: 560px; height: auto; }
+figcaption { color: var(--muted); font-size: 0.85rem; margin-top: 8px; max-width: 70ch; }
+
+/* Expandable details */
+details { border-top: 1px solid var(--line); padding: 14px 0; }
+details:last-of-type { border-bottom: 1px solid var(--line); }
+details > summary { cursor: pointer; font-weight: 600; font-size: 0.95rem; color: var(--ink-2); list-style-position: outside; }
+details > summary:hover { color: var(--ink); }
+details[open] > summary { margin-bottom: 16px; }
+details .inner { font-size: 0.93rem; }
+details ul { padding-left: 20px; }
+.note { background: var(--note-bg); border-radius: 8px; padding: 12px 16px; font-size: 0.88rem; color: var(--ink-2); }
+
+/* Tables */
+.table-wrap { overflow-x: auto; margin: 12px 0 20px; }
+table { border-collapse: collapse; width: 100%; min-width: 720px; font-size: 0.84rem; }
+caption { text-align: left; caption-side: top; padding-bottom: 6px; color: var(--muted); font-size: 0.85rem; }
+th, td { padding: 7px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+th { color: var(--ink-2); font-weight: 600; white-space: nowrap; }
+td:last-child { min-width: 240px; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* Closing sections */
+section.plain { margin: 72px 0 0; }
+section.plain ul { padding-left: 20px; color: var(--ink-2); }
+code { font-size: 0.88em; overflow-wrap: anywhere; }
+footer { margin-top: 72px; padding-top: 24px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+
+@media (max-width: 600px) {
+  body { font-size: 16px; }
+  main { padding-top: 32px; }
+  section.question { padding: 24px 18px; }
+  .callout { padding: 16px 18px; }
+}
+</style>
+</head>
+<body>
+<main>
+
+{% macro data_table(t, caption) %}
+<div class="table-wrap">
+<table>
+  <caption>{{ caption }}</caption>
+  <thead><tr>{% for h, n in t.headers %}<th scope="col"{% if n %} class="num"{% endif %}>{{ h }}</th>{% endfor %}</tr></thead>
+  <tbody>
+  {% for row in t.rows %}<tr>{% for v, n in row %}<td{% if n %} class="num"{% endif %}>{{ v }}</td>{% endfor %}</tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endmacro %}
+
+{% macro question(num, q, owner, heading, why, chart_title, caption, support_title, support_caption, table_caption, method) %}
+<section class="question" id="q{{ num }}" aria-labelledby="q{{ num }}-h">
+  <p class="eyebrow">Question {{ num }} · {{ owner }}</p>
+  <h2 id="q{{ num }}-h">{{ heading }}</h2>
+  <p class="why"><strong>Why it matters.</strong> {{ why }}</p>
+
+  <div class="callout finding">
+    <span class="label">Key finding</span>
+    <p>{{ q.key }}</p>
+  </div>
+
+  <figure>
+    <h3 class="chart-title">{{ chart_title }}</h3>
+    <div class="chart">{{ q.main_chart | safe }}</div>
+    <figcaption>{{ caption }}</figcaption>
+  </figure>
+
+  <div class="meaning">
+    <span class="label">Business interpretation</span>
+    <p>{{ q.meaning }}</p>
+  </div>
+
+  <div class="callout action">
+    <span class="label">Recommended action</span>
+    <ul>{% for a in q.actions %}<li>{{ a }}</li>{% endfor %}</ul>
+  </div>
+
+  <details>
+    <summary>Supporting chart and detailed table</summary>
+    <div class="inner">
+      <figure>
+        <h3 class="chart-title">{{ support_title }}</h3>
+        <div class="chart">{{ q.support_chart | safe }}</div>
+        <figcaption>{{ support_caption }}</figcaption>
+      </figure>
+      {{ data_table(q.table, table_caption) }}
+    </div>
+  </details>
+  <details>
+    <summary>Full interpretation</summary>
+    <div class="inner">
+      <p>{{ q.answer | safe }}</p>
+      <ul>{% for item in q.interpretation %}<li>{{ item }}</li>{% endfor %}</ul>
+    </div>
+  </details>
+  <details>
+    <summary>How this was analysed</summary>
+    <div class="inner">
+      <p>{{ method }}</p>
+      <p class="note">{{ q.caveat }}</p>
+    </div>
+  </details>
+</section>
+{% endmacro %}
+
+<header>
+  <p class="eyebrow">Northwind sample database · orders to {{ cutoff }}</p>
+  <h1>{{ title }}</h1>
+  <p class="lede">Three questions a manager can act on, answered from 830 orders placed between July 1996 and May 1998 by a small food importer and wholesaler.</p>
+  <p class="meta">{% if repo_url %}<a href="{{ repo_url }}">Code and data on GitHub</a> · {% endif %}Built {{ built_at }}</p>
+</header>
+
+<section class="glance" aria-label="At a glance">
+{% for item in summary %}
+  <article>
+    <h3>{{ item.label }}</h3>
+    <p>{{ item.finding }}</p>
+    <ul>{% for a in item.actions %}<li>{{ a }}</li>{% endfor %}</ul>
+    <a href="#{{ item.anchor }}">See the evidence →</a>
+  </article>
+{% endfor %}
+</section>
+
+{{ question(1, q1, "Sales leadership",
+   "Which markets grew or declined, which accounts drove it, and where should sales attention go?",
+   "Sales attention is limited. This shows where extra effort is likely to pay off, and where revenue hangs on a single customer.",
+   "Where each market stands: share change against dependence on one customer",
+   "Each bubble is a market, sized by revenue. The lines divide the chart into six suggested focuses; the shaded band marks markets near the 50% concentration line.",
+   "Which accounts drove the change in the four largest markets",
+   "The accounts whose revenue changed most in each focus market, in dollars.",
+   "Market scorecard",
+   "Revenue is compared between the same two quarters a year apart (Q4 1996 + Q1 1997 against Q4 1997 + Q1 1998). Each market is measured on the change in its share of company revenue, so a market growing exactly as fast as the company scores 0%, and on its largest customer's share of the market. Outperforming means +15% or more relative to the company; underperforming means −10% or less; high concentration means one customer holds over 50%.") }}
+
+{{ question(2, q2, "Purchasing",
+   "Which active products should purchasing restock first?",
+   "Stock-outs lose sales and over-ordering ties up cash. This tells purchasing what to order first.",
+   "How urgent each product is: demand against months of stock left",
+   "Each mark is an active product: lower means fewer months of stock, further right means higher demand. Numbers mark the top " ~ shortlist_size ~ " priorities.",
+   "How far the top " ~ shortlist_size ~ " are from one month of stock",
+   "Units available (in stock plus on order) against one month of recent demand; the gap is the least an order would need.",
+   "Top " ~ shortlist_size ~ " restocking priorities (full ranking in the appendix)",
+   "Recent demand is units ordered in the last 90 days, as a monthly rate. Months of stock is stock divided by that rate. Critical: out of stock, or under half a month even counting stock on order. High: under a month on hand, with too little on order. Watch: below the reorder level, or thin cover without a reorder rule or with erratic demand. Within each tier, products are ranked by the monthly revenue at stake.") }}
+
+{{ question(3, q3, "Operations",
+   "How do processing times and freight costs vary across shipments, and where are the biggest opportunities to improve logistics?",
+   "Late dispatches cost customer goodwill and freight is a cost on every order. This shows whether to fix Northwind's own process or renegotiate with carriers.",
+   "Late dispatches by how much time the customer allowed",
+   "Share of shipped orders sent after the customer's required date.",
+   "Where dispatch time is lost",
+   "Order-days that would be saved if each group's orders were dispatched like the best comparable group's. Groups overlap (every order has a carrier, an employee and a destination), so these are never added together.",
+   "Largest opportunities, including freight gaps that do not survive adjustment",
+   "Processing time is days from order to dispatch for the " ~ q3.overview.ShippedOrders ~ " shipped orders; the " ~ q3.backlog.Orders ~ " unshipped orders are reported separately. Groups are compared only with orders of similar size, and each group's gap is measured against the best comparable group. A regression checks whether carrier differences survive once order size, destination and employee are taken into account.") }}
+
+<section class="plain" aria-labelledby="lim-h">
+  <h2 id="lim-h">What this analysis can't tell us</h2>
+  <ul>
+    <li><strong>Profit:</strong> there are no product costs, so everything is about revenue.</li>
+    <li><strong>Cause:</strong> the comparisons show where things differ, not why.</li>
+    <li><strong>Delivery:</strong> dates record dispatch, not delivery.</li>
+    <li><strong>Timing of stock-outs:</strong> the stock snapshot is undated and there are no supplier lead times.</li>
+  </ul>
+  <p class="meta">Data that would close these gaps: product costs, carrier delivery dates, dated stock records, supplier lead times, sales territories and freight terms.</p>
+</section>
+
+<section class="plain" aria-labelledby="app-h">
+  <h2 id="app-h">Technical appendix</h2>
+
+  <details>
+    <summary>About the data and caveats</summary>
+    <div class="inner"><ul>
+      <li>1996 and 1998 are part-years, so growth compares the same quarters a year apart.</li>
+      <li>Most countries place about one order a month, so smaller countries are grouped into regions.</li>
+      <li>Only 5 customers placed their first order after mid-1997: changes in revenue come from existing accounts.</li>
+      <li>The stock snapshot has no date and there are no supplier lead times: the restocking list is a priority order, not a forecast.</li>
+      <li>Dates record when Northwind dispatched an order, not when it was delivered.</li>
+      <li>There are no product costs, so everything is about revenue, not profit.</li>
+    </ul></div>
+  </details>
+
+  <details>
+    <summary>Q1: quarterly shares, uncertainty and robustness</summary>
+    <div class="inner">
+      <figure><h3 class="chart-title">Each market's share of company revenue by quarter</h3>
+        <div class="chart">{{ appendix.q1_quarterly_chart | safe }}</div>
+        <figcaption>Full quarters only.</figcaption></figure>
+      {{ data_table(appendix.q1_uncertainty, "Bootstrap 90% intervals for relative growth (2,000 resamples of all company orders)") }}
+      {{ data_table(appendix.q1_robustness, "Performance level under alternative definitions") }}
+      {{ data_table(appendix.q1_windows, "Change in share of company revenue under three period comparisons (company growth: " ~ appendix.q1_window_growth.values()|join(", ") ~ ")") }}
+      {{ data_table(appendix.q1_movers, "Largest account gains and losses in every market") }}
+    </div>
+  </details>
+
+  <details>
+    <summary>Q2: full ranking, reorder rules and robustness</summary>
+    <div class="inner">
+      {{ data_table(appendix.q2_watch, "All active products, ranked") }}
+      {{ data_table(appendix.q2_no_rule, "Active products with no reorder level, with suggested levels") }}
+      {{ data_table(appendix.q2_discontinued, "Discontinued products still holding stock") }}
+      {{ data_table(appendix.q2_robustness, "Critical/High products under other demand windows") }}
+    </div>
+  </details>
+
+  <details>
+    <summary>Q3: breakdowns, regression and robustness</summary>
+    <div class="inner">
+      <figure><h3 class="chart-title">Days from order to dispatch, by carrier</h3>
+        <div class="chart">{{ appendix.q3_carriers_chart | safe }}</div>
+        <figcaption>Boxes show the middle half of orders; dots are individual slow orders.</figcaption></figure>
+      {% for name, t in appendix.q3_breakdowns.items() %}{{ data_table(t, "Processing and freight by " ~ name|lower) }}{% endfor %}
+      {% if appendix.q3_regression %}
+      <p>Regression run because {{ appendix.q3_regression_reason }}. Freight: log(freight) on carrier, log(units), log(revenue) and destination. Dispatch: days on carrier, size band, destination, employee and quarter. Robust (HC1) standard errors.</p>
+      {{ data_table(appendix.q3_regression, "Carrier effects compared with the best carrier") }}
+      {% endif %}
+      {% if appendix.q3_regression_without_slow %}
+      <p>To check whether the dispatch gaps above come only from the slowest orders, the same regression is repeated with the slowest 10% of orders removed.</p>
+      {{ data_table(appendix.q3_regression_without_slow, "Carrier effects with the slowest 10% of orders removed") }}
+      {% endif %}
+      {{ data_table(appendix.q3_robustness, "Do the top 3 opportunities stay in the top 5?") }}
+      <p>Small-order consolidation: {{ appendix.q3_consolidation.Orders }} small orders have freight above 15% of revenue ({{ "%.1f"|format(appendix.q3_consolidation.ShareOfAllFreight * 100) }}% of all freight), so it isn't a material opportunity.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Verification</summary>
+    <div class="inner">
+      <p>Every headline number is recalculated a second way: the workbook is read cell by cell with openpyxl and the figures are computed in plain SQL (SQLite), sharing no code with the pandas pipeline. <strong>{{ appendix.checks_total[0] }} of {{ appendix.checks_total[1] }} checks match.</strong></p>
+      <ul>{% for name, (ok, total) in appendix.checks_by_section.items() %}<li>{{ name }}: {{ ok }} of {{ total }}</li>{% endfor %}</ul>
+      <p>Sample orders, products and totals were also worked out by hand from the raw cells; all match (<code>verification/hand_checks.md</code>).</p>
+      {% if appendix.review %}
+      <h3>Independent review</h3>
+      <p>A reviewer that hadn't seen the conclusions recomputed the headline claims from the raw workbook and tried to break them. Each objection and how it was resolved:</p>
+      <ul>{% for r in appendix.review %}<li><strong>{{ r.claim }}</strong> ({{ r.severity }}): {{ r.objection }} <em>Resolution:</em> {{ r.resolution }}</li>{% endfor %}</ul>
+      {% endif %}
+    </div>
+  </details>
+
+  <details>
+    <summary>Methods and definitions</summary>
+    <div class="inner"><ul>
+      <li><strong>Revenue</strong> is price charged × quantity × (1 − discount), counted by order date.</li>
+      <li><strong>Relative growth</strong> is the change in a market's share of company revenue: 0% means it grew exactly as fast as the company.</li>
+      <li><strong>Concentration</strong> is the largest customer's share of the market over the latest four quarters; above 50% is high.</li>
+      <li><strong>Recent demand</strong> is units ordered in the last 90 days (6 Feb–6 May 1998), as a monthly rate.</li>
+      <li><strong>Months of stock</strong> is stock ÷ recent monthly demand.</li>
+      <li><strong>Processing time</strong> is days from order to dispatch. Slow orders are the slowest 10%.</li>
+      <li><strong>Opportunity</strong> is excess days (or freight dollars) per order compared with the best comparable group in the same order-size band, times the group's orders.</li>
+    </ul></div>
+  </details>
+</section>
+
+<footer>
+  <p><strong>Reproduce:</strong> {% if repo_url %}clone <a href="{{ repo_url }}">the repository</a>, {% endif %}install <code>requirements.txt</code> and run <code>python run_analysis.py</code>.</p>
+  <p>Input fingerprint (SHA-256): <code>{{ input_sha256 }}</code><br>
+  Python {{ python }} · {% for lib, v in versions.items() %}{{ lib }} {{ v }}{% if not loop.last %} · {% endif %}{% endfor %}</p>
+</footer>
+</main>
+</body>
+</html>

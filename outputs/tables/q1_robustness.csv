@@ -1,0 +1,11 @@
+Market,IsFocus,Base,ShipTo,LatestQuarter,NoTopCustomer,Agreements,Holds
+Germany,True,Outperforming,Outperforming,Outperforming,Outperforming,3,True
+Brazil,True,Outperforming,Outperforming,Outperforming,Underperforming,2,True
+UK & Ireland,False,Outperforming,Outperforming,Outperforming,In line,2,True
+Southern Europe,False,In line,In line,In line,Underperforming,2,True
+Other South America,False,In line,In line,In line,Outperforming,2,True
+USA,True,In line,In line,In line,In line,3,True
+Central Europe,False,Underperforming,Underperforming,Underperforming,In line,2,True
+Nordics,False,Underperforming,Underperforming,Underperforming,Underperforming,3,True
+France,True,Underperforming,Underperforming,Underperforming,Underperforming,3,True
+Other North America,False,Underperforming,Underperforming,Underperforming,In line,2,True

@@ -1,0 +1,13 @@
+SizeBand,ShipperName,Orders,MedianDays,MeanDays,MedianFreightPerUnit
+Small,Federal Shipping,67,7,7.34328,0.795
+Small,Speedy Express,67,8,8.8806,0.8476
+Small,United Package,70,7,9.54286,0.734524
+Medium,Federal Shipping,61,6,7.27869,0.972333
+Medium,Speedy Express,63,7,9.44444,0.8824
+Medium,United Package,98,7,9.11224,0.921067
+Large,Federal Shipping,61,7,7.88525,0.795211
+Large,Speedy Express,48,7,9.0625,0.909155
+Large,United Package,71,7,10.169,0.935273
+Very large,Federal Shipping,60,6,7.4,1.06627
+Very large,Speedy Express,67,6,7.08955,0.91686
+Very large,United Package,76,7,8.23684,1.25405

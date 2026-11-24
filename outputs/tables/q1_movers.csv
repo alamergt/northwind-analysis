@@ -1,0 +1,53 @@
+Market,CustomerID,CustomerName,RevenuePrior,RevenueCurrent,Change,Direction
+Brazil,HANAR,Hanari Carnes,0,23628.5,23628.5,Gain
+Brazil,GOURL,Gourmet Lanchonetes,1020,6000.6,4980.6,Gain
+Brazil,TRADH,Tradição Hipermercados,0,4234.26,4234.26,Gain
+Brazil,COMMI,Comércio Mineiro,216,108,-108,Loss
+Brazil,FAMIA,Familia Arquibaldo,1205.25,287.8,-917.45,Loss
+Brazil,QUEEN,Queen Cozinha,11931.4,7770.08,-4161.3,Loss
+Central Europe,ERNSH,Ernst Handel,22339.1,37163,14823.9,Gain
+Central Europe,MAISD,Maison Dewey,0,7060.69,7060.69,Gain
+Central Europe,CHOPS,Chop-suey Chinese,1117.6,5300.66,4183.06,Gain
+Central Europe,PICCO,Piccolo und mehr,11123.5,2647.85,-8475.63,Loss
+France,BONAP,Bon app',5895.08,9976.62,4081.54,Gain
+France,FRANR,France restauration,0,2252.06,2252.06,Gain
+France,SPECD,Spécialités du monde,0,2213.35,2213.35,Gain
+France,LAMAI,La maison d'Asie,3958.82,3846.67,-112.15,Loss
+France,BLONP,Blondel père et fils,11222.9,730,-10492.9,Loss
+Germany,QUICK,QUICK-Stop,10635.5,50745.6,40110.2,Gain
+Germany,KOENE,Königlich Essen,4520.6,22439.3,17918.7,Gain
+Germany,LEHMS,Lehmanns Marktstand,1584,5053.15,3469.15,Gain
+Germany,WANDK,Die Wandernde Kuh,1470,0,-1470,Loss
+Germany,FRANK,Frankenversand,7723.44,5353.94,-2369.5,Loss
+Nordics,FOLKO,Folk och fä HB,2410.42,12920.4,10510,Gain
+Nordics,BERGS,Berglunds snabbköp,3429,8782.16,5353.16,Gain
+Nordics,VAFFE,Vaffeljernet,5117.8,8924.38,3806.57,Gain
+Nordics,WARTH,Wartian Herkku,5525,2566.44,-2958.56,Loss
+Nordics,SIMOB,Simons bistro,11541,2942.81,-8598.19,Loss
+Other North America,BOTTM,Bottom-Dollar Markets,5493.85,11744.3,6250.48,Gain
+Other North America,ANATR,Ana Trujillo Emparedados y helados,0,834.4,834.4,Gain
+Other North America,TORTU,Tortuga Restaurante,1191.2,1514.5,323.3,Gain
+Other North America,PERIC,Pericles Comidas clásicas,1929.9,0,-1929.9,Loss
+Other North America,MEREP,Mère Paillarde,15812.4,638.5,-15173.9,Loss
+Other South America,LINOD,LINO-Delicateses,1984,8439.34,6455.33,Gain
+Other South America,OCEAN,Océano Atlántico Ltda.,319.2,3031,2711.8,Gain
+Other South America,RANCH,Rancho grande,443.4,2324.7,1881.3,Gain
+Other South America,LILAS,LILA-Supermercado,4467.38,3668.4,-798.98,Loss
+Southern Europe,GODOS,Godos Cocina Típica,0,6193.71,6193.71,Gain
+Southern Europe,REGGC,Reggiani Caseifici,709.44,4540.4,3830.96,Gain
+Southern Europe,BOLID,Bólido Comidas preparadas,982,3250.85,2268.85,Gain
+Southern Europe,GALED,Galería del gastrónomo,474.2,207.5,-266.7,Loss
+Southern Europe,PRINI,Princesa Isabel Vinhos,2411.04,1411,-1000.04,Loss
+Southern Europe,FURIB,Furia Bacalhau e Frutos do Mar,3173.09,57.8,-3115.28,Loss
+UK & Ireland,HUNGO,Hungry Owl All-Night Grocers,6157.76,24154.2,17996.4,Gain
+UK & Ireland,AROUT,Around the Horn,1786.7,8969.55,7182.85,Gain
+UK & Ireland,ISLAT,Island Trading,614.8,4211.2,3596.4,Gain
+UK & Ireland,EASTC,Eastern Connection,4013,3427,-586,Loss
+UK & Ireland,BSBEV,B's Beverages,1714.2,931,-783.2,Loss
+UK & Ireland,SEVES,Seven Seas Imports,6600.88,5377.34,-1223.54,Loss
+USA,SAVEA,Save-a-lot Markets,17280.9,33131.8,15850.9,Gain
+USA,GREAL,Great Lakes Food Market,0,8902.45,8902.45,Gain
+USA,WHITC,White Clover Markets,3921.48,10399.3,6477.82,Gain
+USA,LAZYK,Lazy K Kountry Store,147,0,-147,Loss
+USA,HUNGC,Hungry Coyote Import Store,882.4,0,-882.4,Loss
+USA,SPLIR,Split Rail Beer & Ale,8286.63,3107,-5179.63,Loss

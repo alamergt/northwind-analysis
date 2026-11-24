@@ -1,0 +1,5 @@
+Model,Carrier,Baseline,Effect,Low95,High95,Unit,Material
+Freight,Federal Shipping,United Package,0.126854,-0.0528578,0.340664,% vs baseline,False
+Freight,Speedy Express,United Package,0.0662281,-0.113489,0.282378,% vs baseline,False
+Dispatch,Speedy Express,Federal Shipping,1.27202,0.120627,2.42342,days vs baseline,True
+Dispatch,United Package,Federal Shipping,1.80159,0.67201,2.93116,days vs baseline,True

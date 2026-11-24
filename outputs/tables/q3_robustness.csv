@@ -1,0 +1,7 @@
+Alternative,Type,BaseTop3,StillInTop5,Holds
+Revenue size bands,Processing,3,3,True
+Revenue size bands,Freight,2,2,True
+Top 1% freight removed,Processing,3,3,True
+Top 1% freight removed,Freight,2,2,True
+Benchmark = all orders,Processing,3,2,False
+Benchmark = all orders,Freight,2,2,True

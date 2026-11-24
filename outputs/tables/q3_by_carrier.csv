@@ -1,0 +1,4 @@
+ShipperName,Orders,MedianDays,MeanDays,P90Days,SlowOrders,LateOrders,MedianFreightPerUnit,MedianFreightShare,TotalFreight,SlowShare,LateShare
+Federal Shipping,249,6,7.4739,12,14,9,0.954348,0.0508844,20363.1,0.0562249,0.0361446
+Speedy Express,245,7,8.57143,18,23,12,0.8824,0.0508142,16035.2,0.0938776,0.0489796
+United Package,315,7,9.23492,21.6,42,16,0.88,0.046626,27556.8,0.133333,0.0507937

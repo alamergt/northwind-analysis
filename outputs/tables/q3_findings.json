@@ -1,0 +1,38 @@
+{
+  "overview": {
+    "ShippedOrders": 809,
+    "MedianDays": 7.0,
+    "MeanDays": 8.491965389369591,
+    "SlowCutoffDays": 18.0,
+    "SlowOrders": 79,
+    "LateOrders": 37,
+    "TotalFreight": 63955.020000000004,
+    "MedianFreightShare": 0.0497059267078872,
+    "RegionMixGap": 0.11390869600852391
+  },
+  "backlog": {
+    "Orders": 21,
+    "RevenueHeld": 25937.4305,
+    "Units": 1198,
+    "MedianAgeDays": 6.0,
+    "OldestAgeDays": 28,
+    "PastRequiredDate": 0
+  },
+  "consolidation": {
+    "Orders": 4,
+    "Freight": 250.60999999999999,
+    "ShareOfAllFreight": 0.003918535245552264,
+    "Material": false
+  },
+  "deadlines": {
+    "MedianDaysByWindow": {
+      "14": 7.5,
+      "28": 7.0,
+      "42": 7.0
+    },
+    "ShortestWindow": 14,
+    "ShortWindowPrioritised": false,
+    "LateThatAreSlow": 0.972972972972973
+  },
+  "regression_reason": "carrier differences remain within size bands and carriers' destination mix differs by up to 11%"
+}
