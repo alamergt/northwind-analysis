@@ -20,6 +20,9 @@ if not WORKBOOK.exists():
     pytest.skip("real workbook not present", allow_module_level=True)
 
 COPY = ["run_analysis.py", "northwind", "templates", "verification", "data"]
+# The trailing expandable sections of each question start here; the
+# chart guide (Q1) and buy list (Q2) are expandable items above it.
+TRAILING = "Supporting chart and detailed table"
 TIMESTAMP = re.compile(r"Built \d{4}-\d{2}-\d{2} \d{2}:\d{2} UTC")
 
 
@@ -143,12 +146,12 @@ def test_each_question_has_required_parts_in_order(page):
         None.
     """
     parts = ["<h2", "Why it matters", "Key finding", "<svg", "Business interpretation",
-             "Recommended action", "<details"]
+             "Recommended action", TRAILING]
     for qid in ("q1", "q2", "q3"):
         section = _section(page, qid)
         positions = [section.index(p) for p in parts]
         assert positions == sorted(positions), qid
-        actions = section[section.index("Recommended action"):section.index("<details")]
+        actions = section[section.index("Recommended action"):section.index(TRAILING)]
         assert actions.count("<li>") >= 2, qid
         full = section[section.index("Full interpretation"):]
         assert full.count("<li>") >= 3, qid
@@ -165,7 +168,7 @@ def test_one_primary_chart_visible_per_question(page):
     """
     for qid in ("q1", "q2", "q3"):
         section = _section(page, qid)
-        visible = section[:section.index("<details")]
+        visible = section[:section.index(TRAILING)]
         assert visible.count("<svg") == 1, qid
         # Only Q2 shows a table up front: the top products to order.
         assert visible.count("<table") == (1 if qid == "q2" else 0), qid
@@ -449,7 +452,7 @@ def test_q1_actions_name_an_account(page):
         None.
     """
     q1 = _section(page, "q1")
-    actions = _text(q1[q1.index("Recommended action"):q1.index("<details")])
+    actions = _text(q1[q1.index("Recommended action"):q1.index(TRAILING)])
     assert "call " in actions and "to find out why orders fell" in actions
 
 
@@ -463,27 +466,43 @@ def test_q2_buy_list_and_selection_rule(page):
         None.
     """
     q2 = _section(page, "q2")
-    visible = q2[:q2.index("<details")]
-    buy = visible[visible.index('class="buy"'):]
+    visible = q2[:q2.index(TRAILING)]
+    buy = visible[visible.index("<summary>What to order first"):]
     assert buy.count("<tr>") == 1 + 5
     assert "Order now (units)" in buy
     text = _text(buy)
     assert "urgency tier" in text and "ranked by monthly revenue at stake" in text
 
 
-def test_glossary_explains_terms(page):
-    """Check the glossary defines each key term.
+def test_expandable_items_stay_in_place(page):
+    """Check priorities, chart guide and buy list are expandable.
 
     Args:
-        page (str): HTML of the page built by the first run.
+        page (str): Built page HTML.
 
     Returns:
         None.
     """
-    assert "Terms in plain English" in page
-    for term in ("Share of company revenue", "Concentration", "Months of stock", "Order-days",
-                 "Likely range", "Adjusted comparison", "Resampling check"):
-        assert term in page
+    prio = page[page.index('class="priorities"'):page.index("</section>", page.index('class="priorities"'))]
+    assert '<details class="expander prio">' in prio and "Top three management priorities" in prio
+    q1, q2 = _section(page, "q1"), _section(page, "q2")
+    assert q1.index("<svg") < q1.index("<summary>How to read this chart") < q1.index("Business interpretation")
+    assert q2.index("<svg") < q2.index("<summary>What to order first") < q2.index("Business interpretation")
+    assert "Terms in plain English" not in page
+
+
+def test_q2_chart_numbers_explained(page):
+    """Check the Q2 chart and caption explain the rank numbers.
+
+    Args:
+        page (str): Built page HTML.
+
+    Returns:
+        None.
+    """
+    q2 = _section(page, "q2")
+    assert "place in the restocking list" in q2
+    assert "1 = order first" in _text(q2)
 
 
 def test_q1_question_wording(page):
@@ -513,7 +532,7 @@ def test_five_assignment_parts_visible_before_details(page):
              "Business interpretation"]
     for qid in ("q1", "q2", "q3"):
         visible = _section(page, qid)
-        visible = visible[:visible.index("<details")]
+        visible = visible[:visible.index(TRAILING)]
         for part in parts:
             assert part in visible, (qid, part)
         assert visible.index("Analytical approach") < visible.index("<svg"), qid

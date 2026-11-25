@@ -348,6 +348,9 @@ def q2_urgency(watch, shortlist_size):
         ax.annotate(str(row["Rank"]), (row["RecentMonthlyDemand"], row["y"]), xytext=(5, 3),
                     textcoords="offset points", fontsize=9.5, color=C["ink"], fontweight="bold", zorder=4)
     ax.set_ylim(floor * 0.8, max(data["y"].max() * 1.4, 10))
+    ax.text(0.99, 0.97, f"Numbers = place in the restocking list\n(1 = order first, top {shortlist_size})",
+            transform=ax.transAxes, ha="right", va="top", fontsize=10, color=C["ink_2"],
+            fontweight="bold")
     ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:g}"))
     ax.set_yticks([0.05, 0.1, 0.5, 1, 2, 5, 10, 20])
     ax.set_xlabel("Recent demand (units per month, last 90 days)")

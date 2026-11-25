@@ -356,6 +356,7 @@ Each question section also has **one compact decision table**: the market scorec
      - Q2 shows the top 5 products with order quantities directly under the chart, plus how the list is chosen: urgency tier first, then monthly revenue at stake.
      - A plain-English glossary is added, and chart text is about 2 points larger.
      - A Q1 action is tentative if the market's share direction flips between periods, if the bootstrap check isn't conclusive, or if its concentration label depends on how dependence is measured.
+   - **Later layout change (owner's request):** "Top three management priorities", the Q1 "How to read this chart" guide and the Q2 "What to order first" list are expandable items, each in the same place as before. The Q2 chart now says what its small numbers mean (place in the restocking list, 1 = order first). The plain-English glossary was removed.
    - **Q3 primary chart** became the late-dispatch rate by allowed window; the opportunity chart moved to the expandable section and shows processing only. Freight gaps that don't survive adjustment are labelled "No action" everywhere, so the page never recommends reviewing carrier rates while also saying the gap isn't supported.
 5. **Limitations and data needed next** (§11).
 6. **Technical appendix** (§5.2), collapsed by default.

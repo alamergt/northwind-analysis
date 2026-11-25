@@ -94,21 +94,28 @@ section.priorities { margin: 0 0 72px; }
 .priorities h3 { margin: 0; font-size: 1.1rem; }
 .priorities p { margin: 0; font-size: 0.95rem; color: var(--ink-2); }
 .legend-note { font-size: 0.85rem; color: var(--muted); }
-.guide { background: var(--note-bg); border-radius: 12px; padding: 16px 20px; margin: -16px 0 32px; font-size: 0.92rem; }
+.guide { background: var(--note-bg); font-size: 0.92rem; }
 .guide p { margin: 0 0 12px; }
 .guide-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .guide-grid div { background: var(--card); border-radius: 8px; padding: 8px 10px; font-size: 0.85rem; }
 .guide-grid strong { display: block; }
 .guide-axis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; font-size: 0.75rem; color: var(--muted);
               text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; text-align: center; }
-.buy { margin: -16px 0 32px; }
 .buy h3 { font-size: 1rem; margin: 0 0 4px; }
 .buy .how { font-size: 0.88rem; color: var(--ink-2); max-width: 70ch; }
-dl.glossary { display: grid; grid-template-columns: max-content 1fr; gap: 8px 20px; font-size: 0.93rem; }
-dl.glossary dt { font-weight: 600; }
-dl.glossary dd { margin: 0; color: var(--ink-2); }
-@media (max-width: 600px) { dl.glossary { grid-template-columns: 1fr; } dl.glossary dd { margin-bottom: 8px; }
-  .guide-grid, .guide-axis { grid-template-columns: 1fr; } .guide-axis { display: none; } }
+@media (max-width: 600px) {   .guide-grid, .guide-axis { grid-template-columns: 1fr; } .guide-axis { display: none; } }
+
+/* Expandable items that stay in place */
+details.expander { border: 1px solid var(--line); border-radius: 12px; padding: 0; margin: 0 0 32px; background: var(--card); }
+details.expander:last-of-type { border-bottom: 1px solid var(--line); }
+details.expander > summary { padding: 16px 20px; font-size: 1rem; font-weight: 600; color: var(--ink); list-style: none; cursor: pointer; }
+details.expander > summary::-webkit-details-marker { display: none; }
+details.expander > summary::before { content: "▸"; display: inline-block; width: 1.2em; color: var(--accent); transition: transform 0.15s; }
+details.expander[open] > summary::before { transform: rotate(90deg); }
+details.expander[open] > summary { margin-bottom: 0; border-bottom: 1px solid var(--line); }
+details.expander > .inner { padding: 16px 20px 20px; }
+details.expander.prio > summary { font-size: clamp(1.4rem, 3.4vw, 1.75rem); letter-spacing: -0.01em; }
+details.expander.prio > summary h2 { display: inline; font-size: inherit; margin: 0; }
 
 /* Charts */
 figure { margin: 8px 0 32px; }
@@ -160,7 +167,7 @@ footer { margin-top: 72px; padding-top: 24px; border-top: 1px solid var(--line);
   <p class="eyebrow">Northwind sample database · orders to 6 May 1998</p>
   <h1>Northwind: markets, stock and logistics</h1>
   <p class="lede">Three questions a manager can act on, answered from 830 orders placed between July 1996 and May 1998 by a small food importer and wholesaler.</p>
-  <p class="meta"><a href="https://github.com/alamergt/northwind-analysis">Code and data on GitHub</a> · Built 2026-11-25 00:40 UTC</p>
+  <p class="meta"><a href="https://github.com/alamergt/northwind-analysis">Code and data on GitHub</a> · Built 2026-11-25 04:24 UTC</p>
 </header>
 
 <section class="glance" aria-label="At a glance">
@@ -191,7 +198,9 @@ footer { margin-top: 72px; padding-top: 24px; border-top: 1px solid var(--line);
 </section>
 
 <section class="priorities" aria-labelledby="prio-h">
-  <h2 id="prio-h">Top three management priorities</h2>
+  <details class="expander prio">
+  <summary><h2 id="prio-h">Top three management priorities</h2></summary>
+  <div class="inner">
   <p class="why">Ranked across departments by how certain the evidence is, how much money is at stake each month, and how quickly the step can be taken.</p>
   <ol>
     <li>
@@ -214,6 +223,8 @@ footer { margin-top: 72px; padding-top: 24px; border-top: 1px solid var(--line);
     </li>
   </ol>
   <p class="legend-note"><span class="badge confirmed">Confirmed</span>holds in every check we ran. <span class="badge tentative">Tentative</span>depends on which period is compared or isn't statistically clear: test it before committing resources. <span class="badge to-verify">To verify</span>a lead to check before acting.</p>
+  </div>
+  </details>
 </section>
 
 <section class="question" id="q1" aria-labelledby="q1-h">
@@ -802,8 +813,10 @@ z
 </div>
     <figcaption>Each bubble is a market, sized by revenue. The lines divide the chart into six suggested focuses; the shaded band marks markets near the 50% concentration line.</figcaption>
   </figure>
-  <div class="guide">
-    <p><strong>How to read this chart.</strong> <em>Across:</em> how the market's share of company revenue changed. Right of the +15% line it grew faster than the company; left of the −10% line it fell behind. <em>Up:</em> how much of the market's revenue comes from its single largest customer; above the 50% line, one customer holds most of it.</p>
+  <details class="expander guide-expander">
+  <summary>How to read this chart</summary>
+  <div class="inner guide">
+    <p><em>Across:</em> how the market's share of company revenue changed. Right of the +15% line it grew faster than the company; left of the −10% line it fell behind. <em>Up:</em> how much of the market's revenue comes from its single largest customer; above the 50% line, one customer holds most of it.</p>
     <div class="guide-axis"><span>Losing ground</span><span>Keeping pace</span><span>Gaining ground</span></div>
     <div class="guide-grid">
       <div><strong>Rescue</strong>Losing ground and reliant on one customer: find out which account is the cause.</div>
@@ -814,6 +827,7 @@ z
       <div><strong>Invest</strong>Growing with a broad base: the best case for more sales effort.</div>
     </div>
   </div>
+  </details>
 
   <div class="meaning">
     <span class="label">Business interpretation</span>
@@ -1996,33 +2010,37 @@ z
     </g>
    </g>
    <g id="text_22">
-    <text style="font-weight: 700; font-size: 9.5px; font-family: var(--font-sans); text-anchor: start; fill: var(--ink)" x="175.053873" y="177.831918" transform="rotate(-0 175.053873 177.831918)">1</text>
+    <text style="font-weight: 700; font-size: 10px; font-family: var(--font-sans); fill: var(--ink-2)" transform="translate(278.098898 28.677874)">Numbers = place in the restocking list</text>
+    <text style="font-weight: 700; font-size: 10px; font-family: var(--font-sans); fill: var(--ink-2)" transform="translate(362.402023 40.680608)">(1 = order first, top 10)</text>
    </g>
    <g id="text_23">
-    <text style="font-weight: 700; font-size: 9.5px; font-family: var(--font-sans); text-anchor: start; fill: var(--ink)" x="355.602404" y="214.50795" transform="rotate(-0 355.602404 214.50795)">2</text>
+    <text style="font-weight: 700; font-size: 9.5px; font-family: var(--font-sans); text-anchor: start; fill: var(--ink)" x="175.053873" y="177.831918" transform="rotate(-0 175.053873 177.831918)">1</text>
    </g>
    <g id="text_24">
-    <text style="font-weight: 700; font-size: 9.5px; font-family: var(--font-sans); text-anchor: start; fill: var(--ink)" x="357.718207" y="223.671756" transform="rotate(-0 357.718207 223.671756)">3</text>
+    <text style="font-weight: 700; font-size: 9.5px; font-family: var(--font-sans); text-anchor: start; fill: var(--ink)" x="355.602404" y="214.50795" transform="rotate(-0 355.602404 214.50795)">2</text>
    </g>
    <g id="text_25">
-    <text style="font-weight: 700; font-size: 9.5px; font-family: var(--font-sans); text-anchor: start; fill: var(--ink)" x="229.359486" y="189.192909" transform="rotate(-0 229.359486 189.192909)">4</text>
+    <text style="font-weight: 700; font-size: 9.5px; font-family: var(--font-sans); text-anchor: start; fill: var(--ink)" x="357.718207" y="223.671756" transform="rotate(-0 357.718207 223.671756)">3</text>
    </g>
    <g id="text_26">
-    <text style="font-weight: 700; font-size: 9.5px; font-family: var(--font-sans); text-anchor: start; fill: var(--ink)" x="245.580643" y="199.248158" transform="rotate(-0 245.580643 199.248158)">5</text>
+    <text style="font-weight: 700; font-size: 9.5px; font-family: var(--font-sans); text-anchor: start; fill: var(--ink)" x="229.359486" y="189.192909" transform="rotate(-0 229.359486 189.192909)">4</text>
    </g>
    <g id="text_27">
-    <text style="font-weight: 700; font-size: 9.5px; font-family: var(--font-sans); text-anchor: start; fill: var(--ink)" x="187.043424" y="169.500986" transform="rotate(-0 187.043424 169.500986)">6</text>
+    <text style="font-weight: 700; font-size: 9.5px; font-family: var(--font-sans); text-anchor: start; fill: var(--ink)" x="245.580643" y="199.248158" transform="rotate(-0 245.580643 199.248158)">5</text>
    </g>
    <g id="text_28">
-    <text style="font-weight: 700; font-size: 9.5px; font-family: var(--font-sans); text-anchor: start; fill: var(--ink)" x="285.780902" y="191.610226" transform="rotate(-0 285.780902 191.610226)">7</text>
+    <text style="font-weight: 700; font-size: 9.5px; font-family: var(--font-sans); text-anchor: start; fill: var(--ink)" x="187.043424" y="169.500986" transform="rotate(-0 187.043424 169.500986)">6</text>
    </g>
    <g id="text_29">
-    <text style="font-weight: 700; font-size: 9.5px; font-family: var(--font-sans); text-anchor: start; fill: var(--ink)" x="180.696014" y="187.361499" transform="rotate(-0 180.696014 187.361499)">8</text>
+    <text style="font-weight: 700; font-size: 9.5px; font-family: var(--font-sans); text-anchor: start; fill: var(--ink)" x="285.780902" y="191.610226" transform="rotate(-0 285.780902 191.610226)">7</text>
    </g>
    <g id="text_30">
-    <text style="font-weight: 700; font-size: 9.5px; font-family: var(--font-sans); text-anchor: start; fill: var(--ink)" x="275.907154" y="185.634056" transform="rotate(-0 275.907154 185.634056)">9</text>
+    <text style="font-weight: 700; font-size: 9.5px; font-family: var(--font-sans); text-anchor: start; fill: var(--ink)" x="180.696014" y="187.361499" transform="rotate(-0 180.696014 187.361499)">8</text>
    </g>
    <g id="text_31">
+    <text style="font-weight: 700; font-size: 9.5px; font-family: var(--font-sans); text-anchor: start; fill: var(--ink)" x="275.907154" y="185.634056" transform="rotate(-0 275.907154 185.634056)">9</text>
+   </g>
+   <g id="text_32">
     <text style="font-weight: 700; font-size: 9.5px; font-family: var(--font-sans); text-anchor: start; fill: var(--ink)" x="263.212335" y="171.952986" transform="rotate(-0 263.212335 171.952986)">10</text>
    </g>
    <g id="legend_1">
@@ -2031,7 +2049,7 @@ z
       <use xlink:href="#m29a5be037c" x="133.473787" y="338.093589" style="fill: var(--negative); stroke: var(--chart-surface); stroke-width: 1.5"/>
      </g>
     </g>
-    <g id="text_32">
+    <g id="text_33">
      <text style="font-size: 10.5px; font-family: var(--font-sans); text-anchor: start; fill: var(--ink-2)" x="146.073787" y="340.849839" transform="rotate(-0 146.073787 340.849839)">Critical (20)</text>
     </g>
     <g id="PathCollection_5">
@@ -2039,7 +2057,7 @@ z
       <use xlink:href="#m9ab49fdbf9" x="239.1891" y="338.093589" style="fill: var(--series-1); stroke: var(--chart-surface); stroke-width: 1.5"/>
      </g>
     </g>
-    <g id="text_33">
+    <g id="text_34">
      <text style="font-size: 10.5px; font-family: var(--font-sans); text-anchor: start; fill: var(--ink-2)" x="251.7891" y="340.849839" transform="rotate(-0 251.7891 340.849839)">High (12)</text>
     </g>
     <g id="PathCollection_6">
@@ -2047,7 +2065,7 @@ z
       <use xlink:href="#m1af900a969" x="332.314256" y="338.093589" style="fill: var(--neutral-mark); stroke: var(--chart-surface); stroke-width: 1.5"/>
      </g>
     </g>
-    <g id="text_34">
+    <g id="text_35">
      <text style="font-size: 10.5px; font-family: var(--font-sans); text-anchor: start; fill: var(--ink-2)" x="344.914256" y="340.849839" transform="rotate(-0 344.914256 340.849839)">Watch or OK (35)</text>
     </g>
    </g>
@@ -2060,10 +2078,11 @@ z
  </defs>
 </svg>
 </div>
-    <figcaption>Each mark is an active product: lower means fewer months of stock, further right means higher demand. Numbers mark the top 10 priorities.</figcaption>
+    <figcaption>Each mark is an active product: lower means fewer months of stock, further right means higher demand. The small numbers beside some marks are each product&#39;s place in the restocking list (1 = order first, up to 10); the first 5 are listed with order quantities under &#34;What to order first&#34; below.</figcaption>
   </figure>
-  <div class="buy">
-    <h3>What to order first</h3>
+  <details class="expander buy">
+  <summary>What to order first: the top 5 products and how many units to order</summary>
+  <div class="inner">
     <p class="how"><strong>How these products were chosen:</strong> every active product is first placed in an urgency tier by how many months of recent demand its stock covers (Critical, then High, Watch, OK). Within each tier, products are ranked by monthly revenue at stake (units sold per month × average price). These are the first 5. The order range covers one month of demand at the long-run rate (low end) and at the recent peak rate (high end).</p>
     <div class="table-wrap">
 <table>
@@ -2080,6 +2099,7 @@ z
 </div>
 
   </div>
+  </details>
 
   <div class="meaning">
     <span class="label">Business interpretation</span>
@@ -3136,27 +3156,6 @@ z
     <li><strong>Timing of stock-outs:</strong> the stock snapshot is undated and there are no supplier lead times.</li>
   </ul>
   <p class="meta">Data that would close these gaps: product costs, carrier delivery dates, dated stock records, supplier lead times, sales territories and freight terms.</p>
-</section>
-
-<section class="plain" aria-labelledby="gloss-h">
-  <h2 id="gloss-h">Terms in plain English</h2>
-  <dl class="glossary">
-    <dt>Share of company revenue</dt><dd>A market's slice of all of Northwind's sales.</dd>
-    <dt>Relative to the company</dt><dd>Whether a market grew faster or slower than Northwind as a whole. 0% means it kept exactly the same slice.</dd>
-    <dt>Concentration</dt><dd>How much of a market's sales come from its single largest customer. Above 50%, losing that one customer would cost most of the market.</dd>
-    <dt>Months of stock</dt><dd>How long the stock on the shelf would last at the recent rate of sales.</dd>
-    <dt>Critical / High / Watch / OK</dt><dd>Urgency tiers. Critical: out of stock, or under two weeks even counting stock on order. High: under a month, with too little on order. Watch: below its reorder level or close to it. OK: nothing urgent.</dd>
-    <dt>Revenue at stake</dt><dd>A product's sales per month at recent demand: what's at risk if it runs out.</dd>
-    <dt>Possible shortage</dt><dd>More units are waiting on unshipped orders than are in stock. Worth checking; not a confirmed backorder.</dd>
-    <dt>Processing time</dt><dd>Days from the customer's order to the day Northwind sends it out.</dd>
-    <dt>Late dispatch</dt><dd>An order sent out after the date the customer asked for.</dd>
-    <dt>Slow order</dt><dd>One of the slowest 10% of orders (more than 18 days from order to dispatch).</dd>
-    <dt>Order-days</dt><dd>Extra days of waiting added up across orders: 10 orders each 2 days slower is 20 order-days.</dd>
-    <dt>Likely range</dt><dd>The range the true figure probably falls in, given how few orders there are (a 95% interval).</dd>
-    <dt>Adjusted comparison</dt><dd>A comparison that holds other things equal, such as order size and destination, so that like is compared with like (a regression).</dd>
-    <dt>Resampling check</dt><dd>Re-running the numbers many times on random reshuffles of the orders to see how much the result could move by chance (a bootstrap).</dd>
-    <dt>Confirmed / Tentative / To verify</dt><dd>Confirmed holds in every check; tentative depends on the period compared or isn't statistically clear; to verify is a lead to check before acting.</dd>
-  </dl>
 </section>
 
 <section class="plain" aria-labelledby="app-h">
