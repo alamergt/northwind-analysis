@@ -9,7 +9,16 @@ from northwind import q3_logistics as q3
 
 
 def _orders(groups):
-    """Build shipped orders in one size band from {group: [days, ...]}."""
+    """Build shipped orders in one size band.
+
+    Args:
+        groups (dict[str, list[float]]): Values for each order, keyed by
+            group.
+
+    Returns:
+        pandas.DataFrame: One Small, 2-unit order per value, with the
+        value as both ProcessingDays and FreightPerUnit.
+    """
     rows, oid = [], 0
     for group, values in groups.items():
         for days in values:
@@ -22,11 +31,28 @@ def _orders(groups):
 
 @pytest.fixture
 def orders():
+    """Return ten orders for group A and ten for group B.
+
+    Args:
+        None.
+
+    Returns:
+        pandas.DataFrame: A at 5 days each; B with eight at 5 days and
+        two at 15 days.
+    """
     # A: ten orders at 5 days. B: eight at 5 days and two at 15 days.
     return _orders({"A": [5] * 10, "B": [5] * 8 + [15] * 2})
 
 
 def test_gap_against_best_group(orders):
+    """Check gaps are measured against the best group's median.
+
+    Args:
+        orders (pandas.DataFrame): Shipped orders for groups A and B.
+
+    Returns:
+        None.
+    """
     gaps = q3.group_gaps(orders, "Grp", "ProcessingDays", Config()).set_index("Group")
     # Benchmark = median 5 (A and B tie; A is first). B's excess = 2 x 10 = 20 days.
     assert gaps.loc["B", "ExcessTotal"] == pytest.approx(20)
@@ -36,11 +62,27 @@ def test_gap_against_best_group(orders):
 
 
 def test_gap_is_weighted(orders):
+    """Check the gap is weighted by units when asked.
+
+    Args:
+        orders (pandas.DataFrame): Shipped orders for groups A and B.
+
+    Returns:
+        None.
+    """
     gaps = q3.group_gaps(orders, "Grp", "FreightPerUnit", Config(), weight_col="Units").set_index("Group")
     assert gaps.loc["B", "Opportunity"] == pytest.approx(40)  # 2 units per order
 
 
 def test_best_group_needs_enough_orders():
+    """Check a group with too few orders can't be the benchmark.
+
+    Args:
+        None.
+
+    Returns:
+        None.
+    """
     # C is fastest but has only 3 orders, so it can't be the benchmark.
     frame = _orders({"A": [6] * 10, "B": [8] * 10, "C": [1] * 3})
     gaps = q3.group_gaps(frame, "Grp", "ProcessingDays", Config()).set_index("Group")
@@ -49,6 +91,14 @@ def test_best_group_needs_enough_orders():
 
 
 def test_overall_benchmark_and_bad_option(orders):
+    """Check the overall benchmark, and ValueError for a bad option.
+
+    Args:
+        orders (pandas.DataFrame): Shipped orders for groups A and B.
+
+    Returns:
+        None.
+    """
     gaps = q3.group_gaps(orders, "Grp", "ProcessingDays", Config(), benchmark="overall")
     assert set(gaps["Group"]) == {"A", "B"}
     with pytest.raises(ValueError):
@@ -56,6 +106,14 @@ def test_overall_benchmark_and_bad_option(orders):
 
 
 def test_ols_hc1_recovers_exact_line():
+    """Check OLS recovers an exact line with zero standard errors.
+
+    Args:
+        None.
+
+    Returns:
+        None.
+    """
     x = pd.Series(np.arange(10, dtype=float))
     design = pd.DataFrame({"Intercept": 1.0, "x": x})
     fit = q3.ols_hc1((2 + 3 * x).to_numpy(), design)
@@ -65,6 +123,14 @@ def test_ols_hc1_recovers_exact_line():
 
 
 def test_adjustment_marks_carriers():
+    """Check adjustment relabels carrier gaps and their actions.
+
+    Args:
+        None.
+
+    Returns:
+        None.
+    """
     opps = pd.DataFrame({
         "Type": ["Processing", "Freight", "Processing"],
         "Dimension": ["Carrier", "Carrier", "Employee"],
@@ -84,6 +150,14 @@ def test_adjustment_marks_carriers():
 
 
 def test_deadline_priority():
+    """Check short-deadline priority, late-and-slow share and medians.
+
+    Args:
+        None.
+
+    Returns:
+        None.
+    """
     frame = pd.DataFrame({
         "AllowedDays": [14, 14, 28, 28, 28],
         "ProcessingDays": [9.0, 9.0, 5.0, 5.0, 30.0],
@@ -97,6 +171,15 @@ def test_deadline_priority():
 
 
 def test_backlog_and_consolidation(synthetic_model):
+    """Check the unshipped backlog and the consolidation estimate.
+
+    Args:
+        synthetic_model (northwind.model.Model): Model of the synthetic
+            workbook.
+
+    Returns:
+        None.
+    """
     config = Config()
     backlog = q3.backlog(synthetic_model, config)
     assert backlog["Orders"] == 1 and backlog["RevenueHeld"] == pytest.approx(100)
@@ -112,6 +195,15 @@ def test_backlog_and_consolidation(synthetic_model):
 
 
 def test_late_by_window(synthetic_model):
+    """Check order and late counts by allowed delivery window.
+
+    Args:
+        synthetic_model (northwind.model.Model): Model of the synthetic
+            workbook.
+
+    Returns:
+        None.
+    """
     shipped = q3.shipped_orders(synthetic_model, Config())
     table = q3.late_by_window(shipped).set_index("AllowedDays")
     assert table.loc[28.0, "Orders"] == 3 and table.loc[28.0, "LateOrders"] == 1

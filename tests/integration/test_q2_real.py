@@ -15,11 +15,29 @@ if not Config().workbook.exists():
 
 @pytest.fixture(scope="module")
 def result():
+    """Run Q2 on the real workbook.
+
+    Args:
+        None.
+
+    Returns:
+        northwind.q2_inventory.Q2Result: Q2 results, shared by the
+        module.
+    """
     config = Config()
     return q2.run(load_model(config), config)
 
 
 def test_ranks_every_active_product_once(result):
+    """Check every active product is ranked exactly once.
+
+    Args:
+        result (northwind.q2_inventory.Q2Result): Q2 results for the
+            real workbook.
+
+    Returns:
+        None.
+    """
     watch = result.watch_list
     assert len(watch) == CT["active_products"]
     assert list(watch["Rank"]) == list(range(1, CT["active_products"] + 1))
@@ -28,38 +46,101 @@ def test_ranks_every_active_product_once(result):
 
 
 def test_ranking_follows_tier_order(result):
+    """Check the watch list is sorted by tier.
+
+    Args:
+        result (northwind.q2_inventory.Q2Result): Q2 results for the
+            real workbook.
+
+    Returns:
+        None.
+    """
     ranks = result.watch_list["Tier"].map({t: i for i, t in enumerate(TIER_ORDER)})
     assert ranks.is_monotonic_increasing
 
 
 def test_critical_rule_holds(result):
+    """Check Critical products are out of stock or under 0.5 months.
+
+    Args:
+        result (northwind.q2_inventory.Q2Result): Q2 results for the
+            real workbook.
+
+    Returns:
+        None.
+    """
     critical = result.watch_list[result.watch_list["Tier"] == "Critical"]
     assert ((critical["UnitsInStock"] <= 0) | (critical["CoverWithOrders"] < 0.5)).all()
 
 
 def test_side_tables(result):
+    """Check the no-reorder-rule and discontinued-stock tables.
+
+    Args:
+        result (northwind.q2_inventory.Q2Result): Q2 results for the
+            real workbook.
+
+    Returns:
+        None.
+    """
     assert len(result.no_reorder_rule) == CT["active_without_reorder_rule"]
     assert (result.discontinued_stock["UnitsInStock"] > 0).all()
     assert len(result.discontinued_stock) == 4
 
 
 def test_suggested_levels_non_negative(result):
+    """Check the three suggested reorder levels are non-negative.
+
+    Args:
+        result (northwind.q2_inventory.Q2Result): Q2 results for the
+            real workbook.
+
+    Returns:
+        None.
+    """
     cols = [c for c in result.watch_list.columns if c.startswith("SuggestedReorder_")]
     assert len(cols) == 3
     assert (result.watch_list[cols] >= 0).all().all()
 
 
 def test_robustness_meets_plan_threshold(result):
+    """Check the ranking holds under every alternative window.
+
+    Args:
+        result (northwind.q2_inventory.Q2Result): Q2 results for the
+            real workbook.
+
+    Returns:
+        None.
+    """
     assert result.robustness["Holds"].all()
 
 
 def test_shortlist_is_top_ten(result):
+    """Check the shortlist is the top ten of the watch list.
+
+    Args:
+        result (northwind.q2_inventory.Q2Result): Q2 results for the
+            real workbook.
+
+    Returns:
+        None.
+    """
     assert list(result.shortlist["Rank"]) == list(range(1, 11))
     assert result.shortlist["ProductID"].tolist() == result.watch_list["ProductID"].head(10).tolist()
     assert "Critical or High" in result.headline
 
 
 def test_deterministic(result):
+    """Check a second run gives the same watch list.
+
+    Args:
+        result (northwind.q2_inventory.Q2Result): Q2 results for the
+            real workbook.
+
+    Returns:
+        None.
+    """
     config = Config()
     again = q2.run(load_model(config), config)
     assert again.watch_list.equals(result.watch_list)

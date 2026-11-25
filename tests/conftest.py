@@ -86,13 +86,29 @@ def synthetic_sheets():
 
 @pytest.fixture
 def sheets():
-    """Fresh copy of the synthetic sheets for each test."""
+    """Return a fresh copy of the synthetic sheets for one test.
+
+    Args:
+        None.
+
+    Returns:
+        dict[str, pandas.DataFrame]: Sheets keyed by sheet name; a test
+        may modify them freely.
+    """
     return synthetic_sheets()
 
 
 @pytest.fixture(scope="session")
 def synthetic_workbook(tmp_path_factory):
-    """Path to the synthetic sheets written as a real .xlsx file."""
+    """Write the synthetic sheets to a real .xlsx file.
+
+    Args:
+        tmp_path_factory (pytest.TempPathFactory): Session temp-folder
+            factory.
+
+    Returns:
+        pathlib.Path: The workbook, shared by the whole test session.
+    """
     path = tmp_path_factory.mktemp("data") / "synthetic.xlsx"
     with pd.ExcelWriter(path) as writer:
         for name, frame in synthetic_sheets().items():
@@ -102,12 +118,26 @@ def synthetic_workbook(tmp_path_factory):
 
 @pytest.fixture(scope="session")
 def synthetic_model(synthetic_workbook):
-    """Model built from the synthetic workbook through the full pipeline."""
+    """Build a model from the synthetic workbook, end to end.
+
+    Args:
+        synthetic_workbook (pathlib.Path): Synthetic .xlsx file.
+
+    Returns:
+        northwind.model.Model: Model built with a cutoff of 6 May 1998.
+    """
     config = Config(cutoff=pd.Timestamp("1998-05-06"))
     return build_model(clean_tables(load_workbook(synthetic_workbook)), config)
 
 
 @pytest.fixture
 def config():
-    """Default configuration."""
+    """Return the default configuration.
+
+    Args:
+        None.
+
+    Returns:
+        northwind.config.Config: A ``Config()`` with default settings.
+    """
     return Config()

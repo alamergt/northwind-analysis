@@ -19,7 +19,7 @@ jobs:
       - name: Install pinned dependencies
         run: pip install -r requirements.txt
       - name: Check docstrings against the course SKILL.md
-        run: python verification/check_docstrings.py
+        run: python verification/check_docstrings.py northwind run_analysis.py verification tests
       - name: Run tests
         run: python -m pytest -q
       - name: Rebuild every table, chart and the page

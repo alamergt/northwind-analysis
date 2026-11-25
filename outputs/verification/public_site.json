@@ -1,5 +1,5 @@
 {
-  "checked_at_utc": "2026-11-24T19:14:31+00:00",
+  "checked_at_utc": "2026-11-25T00:42:35+00:00",
   "page": "https://alamergt.github.io/northwind-analysis/",
   "results": [
     {
@@ -10,7 +10,7 @@
     {
       "check": "served page identical to docs/index.html",
       "pass": true,
-      "detail": "served cbbef1484dc45528\u2026 local cbbef1484dc45528\u2026"
+      "detail": "served bcc6b31a7ccd97aa\u2026 local bcc6b31a7ccd97aa\u2026"
     },
     {
       "check": "page has the three questions and the appendix",

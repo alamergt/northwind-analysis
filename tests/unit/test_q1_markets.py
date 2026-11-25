@@ -19,10 +19,29 @@ def _make_lines():
     Down: prior 10 x $100 = $1,000 from C3; current C3 4 x $100 + C4 4 x
           $50 = $600 (C3 holds 2/3 of the latest four quarters).
     Tiny: 2 orders in each window, too few to judge.
+
+    Args:
+        None.
+
+    Returns:
+        pandas.DataFrame: Lines with OrderID, CustomerID, CustomerName,
+        Quarter, NetRevenue and Market.
     """
     rows, order_id = [], 0
 
     def add(market, customer, quarter, n, revenue):
+        """Append ``n`` identical orders to ``rows``.
+
+        Args:
+            market (str): Market name.
+            customer (str): Customer ID; its name is ``Name <ID>``.
+            quarter (str): Order quarter, e.g. ``1997Q4``.
+            n (int): Number of orders.
+            revenue (float): Net revenue of each order.
+
+        Returns:
+            None. Appends to ``rows`` and advances ``order_id``.
+        """
         nonlocal order_id
         for _ in range(n):
             order_id += 1
@@ -45,16 +64,43 @@ def _make_lines():
 
 @pytest.fixture
 def lines():
+    """Return the hand-built order lines.
+
+    Args:
+        None.
+
+    Returns:
+        pandas.DataFrame: Output of ``_make_lines``.
+    """
     return _make_lines()
 
 
 @pytest.fixture
 def scored(lines):
+    """Score the hand-built markets.
+
+    Args:
+        lines (pandas.DataFrame): Hand-built order lines.
+
+    Returns:
+        tuple[pandas.DataFrame, pandas.DataFrame, dict]: Scorecard
+        indexed by Market, movers table and company totals.
+    """
     card, movers, company = q1.scorecard(lines, Config())
     return card.set_index("Market"), movers, company
 
 
 def test_company_totals(scored):
+    """Check company revenue in both windows and its growth.
+
+    Args:
+        scored (tuple[pandas.DataFrame, pandas.DataFrame, dict]):
+            Scorecard indexed by Market, movers table and company
+            totals.
+
+    Returns:
+        None.
+    """
     _, _, company = scored
     assert company["RevenuePrior"] == pytest.approx(COMPANY_PRIOR)
     assert company["RevenueCurrent"] == pytest.approx(COMPANY_CURRENT)
@@ -62,6 +108,16 @@ def test_company_totals(scored):
 
 
 def test_relative_growth_and_shares(scored):
+    """Check market growth, relative growth and revenue shares.
+
+    Args:
+        scored (tuple[pandas.DataFrame, pandas.DataFrame, dict]):
+            Scorecard indexed by Market, movers table and company
+            totals.
+
+    Returns:
+        None.
+    """
     card, _, _ = scored
     assert card.loc["Up", "Growth"] == pytest.approx(0.8)
     assert card.loc["Up", "SharePrior"] == pytest.approx(1000 / COMPANY_PRIOR)
@@ -71,6 +127,16 @@ def test_relative_growth_and_shares(scored):
 
 
 def test_actions_and_flags(scored):
+    """Check performance, risk, action and flags per market.
+
+    Args:
+        scored (tuple[pandas.DataFrame, pandas.DataFrame, dict]):
+            Scorecard indexed by Market, movers table and company
+            totals.
+
+    Returns:
+        None.
+    """
     card, _, _ = scored
     up, down = card.loc["Up"], card.loc["Down"]
     assert (up["Performance"], up["ConcentrationRisk"], up["RecommendedAction"]) == (
@@ -83,11 +149,31 @@ def test_actions_and_flags(scored):
 
 
 def test_partial_quarter_excluded(scored):
+    """Check that the partial quarter is left out of the windows.
+
+    Args:
+        scored (tuple[pandas.DataFrame, pandas.DataFrame, dict]):
+            Scorecard indexed by Market, movers table and company
+            totals.
+
+    Returns:
+        None.
+    """
     card, _, _ = scored
     assert card.loc["Up", "RevenueCurrent"] == pytest.approx(1800)
 
 
 def test_decomposition_adds_up(scored):
+    """Check the orders and size effects sum to each change.
+
+    Args:
+        scored (tuple[pandas.DataFrame, pandas.DataFrame, dict]):
+            Scorecard indexed by Market, movers table and company
+            totals.
+
+    Returns:
+        None.
+    """
     card, _, _ = scored
     for market in ("Up", "Down"):
         row = card.loc[market]
@@ -95,12 +181,32 @@ def test_decomposition_adds_up(scored):
 
 
 def test_dependence(scored):
+    """Check top-customer dependence in each market.
+
+    Args:
+        scored (tuple[pandas.DataFrame, pandas.DataFrame, dict]):
+            Scorecard indexed by Market, movers table and company
+            totals.
+
+    Returns:
+        None.
+    """
     card, _, _ = scored
     assert card.loc["Up", "Dependence"] == pytest.approx(0.5)
     assert card.loc["Down", "Dependence"] == pytest.approx(400 / 600)
 
 
 def test_movers_sum_and_direction(scored):
+    """Check movers sum to the market change and are labelled right.
+
+    Args:
+        scored (tuple[pandas.DataFrame, pandas.DataFrame, dict]):
+            Scorecard indexed by Market, movers table and company
+            totals.
+
+    Returns:
+        None.
+    """
     _, movers, _ = scored
     down = movers[movers["Market"] == "Down"].set_index("CustomerID")
     assert down.loc["C3", "Change"] == pytest.approx(-600)
@@ -111,11 +217,29 @@ def test_movers_sum_and_direction(scored):
 
 
 def test_consistency_flag(scored):
+    """Check the share measures agree in direction for market Up.
+
+    Args:
+        scored (tuple[pandas.DataFrame, pandas.DataFrame, dict]):
+            Scorecard indexed by Market, movers table and company
+            totals.
+
+    Returns:
+        None.
+    """
     card, _, _ = scored
     assert bool(card.loc["Up", "Consistent"])
 
 
 def test_quarterly_table(lines):
+    """Check the quarterly table's rows, completeness flag and totals.
+
+    Args:
+        lines (pandas.DataFrame): Hand-built order lines.
+
+    Returns:
+        None.
+    """
     table = q1.quarterly_table(lines, Config())
     tiny = table[table["Market"] == "Tiny"]
     assert len(tiny) == table["Quarter"].nunique()
@@ -137,11 +261,34 @@ def test_quarterly_table(lines):
     ],
 )
 def test_bootstrap_triggers(rel, consistent, expected):
+    """Check when a market needs the bootstrap check, and why.
+
+    Args:
+        rel (float): Relative growth.
+        consistent (bool): Whether the share measures agree in
+            direction.
+        expected (str | None): Expected trigger reason; None when no
+            bootstrap is needed.
+
+    Returns:
+        None.
+    """
     row = pd.Series({"RecommendedAction": "Invest", "RelativeGrowth": rel, "Consistent": consistent})
     assert q1.needs_bootstrap(row, Config()) == expected
 
 
 def test_bootstrap_is_reproducible_and_brackets_estimate(lines, scored):
+    """Check the bootstrap is repeatable and brackets the estimate.
+
+    Args:
+        lines (pandas.DataFrame): Hand-built order lines.
+        scored (tuple[pandas.DataFrame, pandas.DataFrame, dict]):
+            Scorecard indexed by Market, movers table and company
+            totals.
+
+    Returns:
+        None.
+    """
     card, _, _ = scored
     config = Config()
     first = q1.bootstrap_relative_growth(lines, "Down", config)
@@ -150,6 +297,14 @@ def test_bootstrap_is_reproducible_and_brackets_estimate(lines, scored):
 
 
 def test_clear_levels_skip_bootstrap(lines):
+    """Check only triggered markets are bootstrapped.
+
+    Args:
+        lines (pandas.DataFrame): Hand-built order lines.
+
+    Returns:
+        None.
+    """
     config = Config()
     card, _, _ = q1.scorecard(lines, config)
     boot = q1.performance_confidence(card, lines, config)
@@ -159,6 +314,14 @@ def test_clear_levels_skip_bootstrap(lines):
 
 
 def test_summary_is_worded_as_recommendation(lines):
+    """Check market summaries read as suggestions with caveats.
+
+    Args:
+        lines (pandas.DataFrame): Hand-built order lines.
+
+    Returns:
+        None.
+    """
     config = Config()
     card, movers, company = q1.scorecard(lines, config)
     q1.performance_confidence(card, lines, config)
@@ -169,5 +332,14 @@ def test_summary_is_worded_as_recommendation(lines):
 
 
 def test_unknown_basis_raises(synthetic_model):
+    """Check that an unknown revenue basis raises ValueError.
+
+    Args:
+        synthetic_model (northwind.model.Model): Model of the synthetic
+            workbook.
+
+    Returns:
+        None.
+    """
     with pytest.raises(ValueError, match="basis"):
         q1.prepare_lines(synthetic_model, Config(), basis="planet")

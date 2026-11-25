@@ -50,7 +50,8 @@ class Q3Result:
         deadlines (dict): Whether short-deadline orders are prioritised.
         regression (pandas.DataFrame): Carrier effects after adjusting
             for size and destination; empty if not triggered.
-        regression_reason (str | None): Why the regression ran.
+        regression_reason (str | None): Why the regression ran; None
+            if it didn't run (``regression`` is then empty).
         robustness (pandas.DataFrame): Top opportunities under
             alternative definitions (plan 8.3).
         regression_without_slow (pandas.DataFrame): The carrier

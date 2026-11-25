@@ -9,3 +9,6 @@ __pycache__/
 
 # Personal tool configuration, not part of the analysis
 SKILL.md
+
+# Instructor-provided Claude Code skill (kept out of the public repository)
+.claude/

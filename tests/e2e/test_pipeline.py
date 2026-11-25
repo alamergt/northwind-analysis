@@ -1,4 +1,4 @@
-"""End-to-end tests: run the whole pipeline on a copy of the project (plan 7.3)."""
+"""End-to-end tests of the whole pipeline on a project copy (plan 7.3)."""
 
 import csv
 import json
@@ -44,17 +44,45 @@ def _run_copy(dest):
 
 @pytest.fixture(scope="module")
 def runs(tmp_path_factory):
+    """Run the pipeline twice, each in a fresh project copy.
+
+    Args:
+        tmp_path_factory (pytest.TempPathFactory): Session temp-folder
+            factory.
+
+    Returns:
+        tuple[tuple[pathlib.Path, subprocess.CompletedProcess], ...]:
+        Folder and finished run of each copy.
+    """
     first, second = tmp_path_factory.mktemp("run1"), tmp_path_factory.mktemp("run2")
     return (first, _run_copy(first)), (second, _run_copy(second))
 
 
 @pytest.fixture(scope="module")
 def page(runs):
+    """Return the page built by the first run.
+
+    Args:
+        runs (tuple[tuple[pathlib.Path, subprocess.CompletedProcess],
+            ...]): Folder and finished run of each of the two copies.
+
+    Returns:
+        str: HTML of ``docs/index.html``.
+    """
     (root, _), _ = runs
     return (root / "docs" / "index.html").read_text(encoding="utf-8")
 
 
 def test_pipeline_succeeds(runs):
+    """Check both runs exit cleanly and write the page and .nojekyll.
+
+    Args:
+        runs (tuple[tuple[pathlib.Path, subprocess.CompletedProcess],
+            ...]): Folder and finished run of each of the two copies.
+
+    Returns:
+        None.
+    """
     for root, proc in runs:
         assert proc.returncode == 0, proc.stdout + proc.stderr
         assert (root / "docs" / "index.html").exists()
@@ -62,17 +90,43 @@ def test_pipeline_succeeds(runs):
 
 
 def test_page_has_every_section(page):
+    """Check the page contains every required section.
+
+    Args:
+        page (str): HTML of the page built by the first run.
+
+    Returns:
+        None.
+    """
     for anchor in ('id="q1"', 'id="q2"', 'id="q3"', "Technical appendix", "Verification",
                    "What this analysis can't tell us", "Reproduce:", "Input fingerprint"):
         assert anchor in page
 
 
 def _section(page, qid):
+    """Return one question's section of the page.
+
+    Args:
+        page (str): HTML of the page built by the first run.
+        qid (str): Section id, ``q1`` to ``q3``.
+
+    Returns:
+        str: HTML from the section's ``id`` attribute up to its
+        ``</section>`` tag.
+    """
     start = page.index(f'id="{qid}"')
     return page[start:page.index("</section>", start)]
 
 
 def test_two_titled_charts_per_question(page):
+    """Check each question has two charts, each with a title.
+
+    Args:
+        page (str): HTML of the page built by the first run.
+
+    Returns:
+        None.
+    """
     for qid in ("q1", "q2", "q3"):
         section = _section(page, qid)
         assert section.count("<svg") == 2, qid
@@ -80,6 +134,14 @@ def test_two_titled_charts_per_question(page):
 
 
 def test_each_question_has_required_parts_in_order(page):
+    """Check each question's parts appear in order with enough items.
+
+    Args:
+        page (str): HTML of the page built by the first run.
+
+    Returns:
+        None.
+    """
     parts = ["<h2", "Why it matters", "Key finding", "<svg", "Business interpretation",
              "Recommended action", "<details"]
     for qid in ("q1", "q2", "q3"):
@@ -93,6 +155,14 @@ def test_each_question_has_required_parts_in_order(page):
 
 
 def test_one_primary_chart_visible_per_question(page):
+    """Check one chart, and only Q2's table, show before the details.
+
+    Args:
+        page (str): HTML of the page built by the first run.
+
+    Returns:
+        None.
+    """
     for qid in ("q1", "q2", "q3"):
         section = _section(page, qid)
         visible = section[:section.index("<details")]
@@ -102,18 +172,42 @@ def test_one_primary_chart_visible_per_question(page):
 
 
 def test_shortages_are_not_called_confirmed_backorders(page):
+    """Check shortages are described as possible, not confirmed.
+
+    Args:
+        page (str): HTML of the page built by the first run.
+
+    Returns:
+        None.
+    """
     q2 = _section(page, "q2")
     assert "likely backorders" not in page and "Possible backorder" not in page
     assert "possible shortages" in q2 and "not confirmed backorders" in q2
 
 
 def test_rescue_does_not_blame_a_growing_key_account(page):
+    """Check Q1 doesn't blame a key account that grew.
+
+    Args:
+        page (str): HTML of the page built by the first run.
+
+    Returns:
+        None.
+    """
     q1 = _section(page, "q1")
     assert "the key account is the likely issue" not in page
     assert "Ernst Handel" not in q1 or "the main cause" in q1
 
 
 def test_no_recommendation_to_act_on_unsupported_freight(page):
+    """Check Q3 recommends no action on the unsupported freight gap.
+
+    Args:
+        page (str): HTML of the page built by the first run.
+
+    Returns:
+        None.
+    """
     q3 = _section(page, "q3")
     assert "Review United Package&#39;s rates" not in q3
     assert "rates, or move comparable shipments" not in q3
@@ -121,6 +215,14 @@ def test_no_recommendation_to_act_on_unsupported_freight(page):
 
 
 def test_no_missing_value_text(page):
+    """Check no NaN, None or inf text appears outside the charts.
+
+    Args:
+        page (str): HTML of the page built by the first run.
+
+    Returns:
+        None.
+    """
     visible = re.sub(r"<svg.*?</svg>", "", page, flags=re.S)
     visible = re.sub(r"<[^>]+>", " ", visible)
     for bad in ("NaN", "None", " nan ", " inf "):
@@ -128,18 +230,44 @@ def test_no_missing_value_text(page):
 
 
 def test_self_contained(page):
+    """Check the page is self-contained, with colors only in CSS.
+
+    Args:
+        page (str): HTML of the page built by the first run.
+
+    Returns:
+        None.
+    """
     assert not re.search(r'<(script|link|img)[^>]+(src|href)="https?://', page)
     assert "<script" not in page
     assert re.findall(r"#[0-9a-fA-F]{6}", re.sub(r"<style>.*?</style>", "", page, flags=re.S)) == []
 
 
 def test_charts_have_text_alternatives(page):
+    """Check all eight charts have an image role and an aria-label.
+
+    Args:
+        page (str): HTML of the page built by the first run.
+
+    Returns:
+        None.
+    """
     svgs = re.findall(r"<svg[^>]*>", page)
     assert len(svgs) == 8
     assert all('role="img"' in s and "aria-label=" in s for s in svgs)
 
 
 def test_headline_numbers_match_tables(runs, page):
+    """Check headline numbers on the page match the output files.
+
+    Args:
+        runs (tuple[tuple[pathlib.Path, subprocess.CompletedProcess],
+            ...]): Folder and finished run of each of the two copies.
+        page (str): HTML of the page built by the first run.
+
+    Returns:
+        None.
+    """
     (root, _), _ = runs
     tables = root / "outputs" / "tables"
     with open(tables / "q2_shortlist.csv", encoding="utf-8") as handle:
@@ -154,6 +282,15 @@ def test_headline_numbers_match_tables(runs, page):
 
 
 def test_deterministic_apart_from_timestamp(runs):
+    """Check both runs match apart from the build timestamp.
+
+    Args:
+        runs (tuple[tuple[pathlib.Path, subprocess.CompletedProcess],
+            ...]): Folder and finished run of each of the two copies.
+
+    Returns:
+        None.
+    """
     (a, _), (b, _) = runs
     page_a = TIMESTAMP.sub("", (a / "docs" / "index.html").read_text(encoding="utf-8"))
     page_b = TIMESTAMP.sub("", (b / "docs" / "index.html").read_text(encoding="utf-8"))
@@ -163,6 +300,15 @@ def test_deterministic_apart_from_timestamp(runs):
 
 
 def test_input_unchanged(runs):
+    """Check the run leaves the workbook copy unchanged.
+
+    Args:
+        runs (tuple[tuple[pathlib.Path, subprocess.CompletedProcess],
+            ...]): Folder and finished run of each of the two copies.
+
+    Returns:
+        None.
+    """
     (a, _), _ = runs
     assert file_sha256(a / "data" / "Northwind Database.xlsx") == file_sha256(WORKBOOK)
 
@@ -170,11 +316,28 @@ def test_input_unchanged(runs):
 # --- Corrections from the independent review (gate 6) -----------------------
 
 def _text(html_part):
+    """Return the visible text of an HTML fragment.
+
+    Args:
+        html_part (str): HTML to convert.
+
+    Returns:
+        str: Text without charts or tags, whitespace collapsed and
+        apostrophes unescaped.
+    """
     html_part = re.sub(r"<svg.*?</svg>", "", html_part, flags=re.S)
     return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", html_part)).replace("&#39;", "'")
 
 
 def test_q3_does_not_overstate(page):
+    """Check Q3 avoids the overstated claims and shows uncertainty.
+
+    Args:
+        page (str): HTML of the page built by the first run.
+
+    Returns:
+        None.
+    """
     q3 = _text(_section(page, "q3"))
     assert "median 7 days everywhere" not in q3
     assert "97%" not in q3
@@ -183,6 +346,14 @@ def test_q3_does_not_overstate(page):
 
 
 def test_q1_separates_clear_from_tentative(page):
+    """Check Q1 labels clear and tentative results separately.
+
+    Args:
+        page (str): HTML of the page built by the first run.
+
+    Returns:
+        None.
+    """
     q1 = _text(_section(page, "q1"))
     assert "depending on the quarters compared" in q1
     assert "Tentative" in q1 and "Confirmed" in q1
@@ -190,6 +361,14 @@ def test_q1_separates_clear_from_tentative(page):
 
 
 def test_q2_states_assumption_and_range(page):
+    """Check Q2 states the stock-count assumption and a unit range.
+
+    Args:
+        page (str): HTML of the page built by the first run.
+
+    Returns:
+        None.
+    """
     q2 = _text(_section(page, "q2"))
     assert "assuming the undated stock count" in q2
     assert re.search(r"roughly \d+–\d+ (more )?units", q2)
@@ -197,6 +376,14 @@ def test_q2_states_assumption_and_range(page):
 
 
 def test_review_listed_in_appendix(page):
+    """Check the appendix lists the independent review and its fixes.
+
+    Args:
+        page (str): HTML of the page built by the first run.
+
+    Returns:
+        None.
+    """
     assert "Independent review" in page
     assert page.count("Resolution:") >= 10
 
@@ -204,6 +391,14 @@ def test_review_listed_in_appendix(page):
 # --- Executive revisions -------------------------------------------------------
 
 def test_summary_cards_have_one_metric_finding_and_action(page):
+    """Check each of three summary cards has one metric and one action.
+
+    Args:
+        page (str): HTML of the page built by the first run.
+
+    Returns:
+        None.
+    """
     glance = page[page.index('class="glance"'):page.index('class="priorities"')]
     cards = glance.split("<article>")[1:]
     assert len(cards) == 3
@@ -214,6 +409,14 @@ def test_summary_cards_have_one_metric_finding_and_action(page):
 
 
 def test_three_ranked_priorities_all_confirmed(page):
+    """Check three ranked, confirmed priorities with distinct owners.
+
+    Args:
+        page (str): HTML of the page built by the first run.
+
+    Returns:
+        None.
+    """
     prio = page[page.index('class="priorities"'):page.index('class="legend-note"')]
     assert [int(r) for r in re.findall(r'class="rank">(\d)<', prio)] == [1, 2, 3]
     assert prio.count("Next step:") == 3
@@ -222,6 +425,14 @@ def test_three_ranked_priorities_all_confirmed(page):
 
 
 def test_q1_chart_guide_explains_axes_and_six_categories(page):
+    """Check the Q1 chart guide explains its axes and six categories.
+
+    Args:
+        page (str): HTML of the page built by the first run.
+
+    Returns:
+        None.
+    """
     q1 = _text(_section(page, "q1"))
     assert "How to read this chart" in q1 and "Across:" in q1 and "Up:" in q1
     for category in ("Rescue", "Protect", "Broaden", "Diagnose", "Maintain", "Invest"):
@@ -229,12 +440,28 @@ def test_q1_chart_guide_explains_axes_and_six_categories(page):
 
 
 def test_q1_actions_name_an_account(page):
+    """Check Q1's actions name an account to call.
+
+    Args:
+        page (str): HTML of the page built by the first run.
+
+    Returns:
+        None.
+    """
     q1 = _section(page, "q1")
     actions = _text(q1[q1.index("Recommended action"):q1.index("<details")])
     assert "call " in actions and "to find out why orders fell" in actions
 
 
 def test_q2_buy_list_and_selection_rule(page):
+    """Check the Q2 buy list has five rows and states its rule.
+
+    Args:
+        page (str): HTML of the page built by the first run.
+
+    Returns:
+        None.
+    """
     q2 = _section(page, "q2")
     visible = q2[:q2.index("<details")]
     buy = visible[visible.index('class="buy"'):]
@@ -245,6 +472,14 @@ def test_q2_buy_list_and_selection_rule(page):
 
 
 def test_glossary_explains_terms(page):
+    """Check the glossary defines each key term.
+
+    Args:
+        page (str): HTML of the page built by the first run.
+
+    Returns:
+        None.
+    """
     assert "Terms in plain English" in page
     for term in ("Share of company revenue", "Concentration", "Months of stock", "Order-days",
                  "Likely range", "Adjusted comparison", "Resampling check"):
@@ -252,12 +487,28 @@ def test_glossary_explains_terms(page):
 
 
 def test_q1_question_wording(page):
+    """Check Q1 uses the revised question wording.
+
+    Args:
+        page (str): HTML of the page built by the first run.
+
+    Returns:
+        None.
+    """
     assert ("How should Northwind prioritize its sales markets based on revenue performance "
             "and customer concentration risk?") in _section(page, "q1")
     assert "grew or declined" not in page
 
 
 def test_five_assignment_parts_visible_before_details(page):
+    """Check each question shows the five parts before the details.
+
+    Args:
+        page (str): HTML of the page built by the first run.
+
+    Returns:
+        None.
+    """
     parts = ["<h2", "Why it matters", "Analytical approach", "<svg", "Key finding",
              "Business interpretation"]
     for qid in ("q1", "q2", "q3"):
