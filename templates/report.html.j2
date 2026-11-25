@@ -62,6 +62,7 @@ header { margin-bottom: 48px; }
 /* Question sections */
 section.question { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 40px; margin: 0 0 56px; }
 .why { color: var(--ink-2); max-width: 64ch; margin-bottom: 28px; }
+.approach { color: var(--ink-2); max-width: 68ch; font-size: 0.95rem; margin: 0 0 20px; }
 .callout { border-radius: 12px; padding: 20px 24px; margin: 0 0 32px; }
 .callout .label { display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; margin-bottom: 6px; }
 .finding { background: var(--accent-soft); border-left: 4px solid var(--accent); }
@@ -167,7 +168,7 @@ footer { margin-top: 72px; padding-top: 24px; border-top: 1px solid var(--line);
 
 {% macro badge(status) %}<span class="badge {{ status|lower|replace(' ', '-') }}">{{ status }}</span>{% endmacro %}
 
-{% macro question(num, q, owner, heading, why, chart_title, caption, support_title, support_caption, table_caption, method) %}
+{% macro question(num, q, owner, heading, why, chart_title, caption, support_title, support_caption, table_caption, method, approach="") %}
 <section class="question" id="q{{ num }}" aria-labelledby="q{{ num }}-h">
   <p class="eyebrow">Question {{ num }} · {{ owner }}</p>
   <h2 id="q{{ num }}-h">{{ heading }}</h2>
@@ -177,6 +178,8 @@ footer { margin-top: 72px; padding-top: 24px; border-top: 1px solid var(--line);
     <span class="label">Key finding</span>
     <p>{{ q.key }}</p>
   </div>
+
+  <p class="approach"><strong>Analytical approach.</strong> {{ approach }}</p>
 
   <figure>
     <h3 class="chart-title">{{ chart_title }}</h3>
@@ -260,14 +263,15 @@ footer { margin-top: 72px; padding-top: 24px; border-top: 1px solid var(--line);
 </section>
 
 {% call question(1, q1, "Sales leadership",
-   "Which markets grew or declined, which accounts drove it, and where should sales attention go?",
+   "How should Northwind prioritize its sales markets based on revenue performance and customer concentration risk?",
    "Sales attention is limited. This shows where extra effort is likely to pay off, and where revenue hangs on a single customer.",
    "Where each market stands: share change against dependence on one customer",
    "Each bubble is a market, sized by revenue. The lines divide the chart into six suggested focuses; the shaded band marks markets near the 50% concentration line.",
    "Which accounts drove the change in the four largest markets",
    "The accounts whose revenue changed most in each focus market, in dollars.",
    "Market scorecard",
-   "Revenue is compared between the same two quarters a year apart (Q4 1996 + Q1 1997 against Q4 1997 + Q1 1998). Each market is measured on the change in its share of company revenue, so a market growing exactly as fast as the company scores 0%, and on its largest customer's share of the market. Outperforming means +15% or more relative to the company; underperforming means −10% or less; high concentration means one customer holds over 50%.") %}
+   "Revenue is compared between the same two quarters a year apart (Q4 1996 + Q1 1997 against Q4 1997 + Q1 1998). Each market is measured on the change in its share of company revenue, so a market growing exactly as fast as the company scores 0%, and on its largest customer's share of the market. Outperforming means +15% or more relative to the company; underperforming means −10% or less; high concentration means one customer holds over 50%.",
+   approach="We compared each market's revenue in Q4 1997 + Q1 1998 with the same two quarters a year earlier, measured how its share of company revenue changed, and measured how much of it comes from its single largest customer. Those two measures place each market in one of six focus areas on the chart below.") %}
   <div class="guide">
     <p><strong>How to read this chart.</strong> <em>Across:</em> how the market's share of company revenue changed. Right of the +15% line it grew faster than the company; left of the −10% line it fell behind. <em>Up:</em> how much of the market's revenue comes from its single largest customer; above the 50% line, one customer holds most of it.</p>
     <div class="guide-axis"><span>Losing ground</span><span>Keeping pace</span><span>Gaining ground</span></div>
@@ -290,7 +294,8 @@ footer { margin-top: 72px; padding-top: 24px; border-top: 1px solid var(--line);
    "How far the top " ~ shortlist_size ~ " are from one month of stock",
    "Units available (in stock plus on order) against one month of recent demand; the gap is the least an order would need.",
    "Top " ~ shortlist_size ~ " restocking priorities (full ranking in the appendix)",
-   "Recent demand is units ordered in the last 90 days, as a monthly rate. Months of stock is stock divided by that rate. Critical: out of stock, or under half a month even counting stock on order. High: under a month on hand, with too little on order. Watch: below the reorder level, or thin cover without a reorder rule or with erratic demand. Within each tier, products are ranked by the monthly revenue at stake.") %}
+   "Recent demand is units ordered in the last 90 days, as a monthly rate. Months of stock is stock divided by that rate. Critical: out of stock, or under half a month even counting stock on order. High: under a month on hand, with too little on order. Watch: below the reorder level, or thin cover without a reorder rule or with erratic demand. Within each tier, products are ranked by the monthly revenue at stake.",
+   approach="For each active product we compared stock on hand and on order with units sold per month over the last 90 days, placed it in an urgency tier by how many months of demand its stock covers, and ranked products within each tier by the monthly revenue at stake.") %}
   <div class="buy">
     <h3>What to order first</h3>
     <p class="how"><strong>How these products were chosen:</strong> every active product is first placed in an urgency tier by how many months of recent demand its stock covers (Critical, then High, Watch, OK). Within each tier, products are ranked by monthly revenue at stake (units sold per month × average price). These are the first {{ buy_list_size }}. The order range covers one month of demand at the long-run rate (low end) and at the recent peak rate (high end).</p>
@@ -306,7 +311,8 @@ footer { margin-top: 72px; padding-top: 24px; border-top: 1px solid var(--line);
    "Where dispatch time is lost",
    "Order-days that would be saved if each group's orders were dispatched like the best comparable group's. Groups overlap (every order has a carrier, an employee and a destination), so these are never added together.",
    "Largest opportunities, including freight gaps that do not survive adjustment",
-   "Processing time is days from order to dispatch for the " ~ q3.overview.ShippedOrders ~ " shipped orders; the " ~ q3.backlog.Orders ~ " unshipped orders are reported separately. Groups are compared only with orders of similar size, and each group's gap is measured against the best comparable group. A regression checks whether carrier differences survive once order size, destination and employee are taken into account.") }}
+   "Processing time is days from order to dispatch for the " ~ q3.overview.ShippedOrders ~ " shipped orders; the " ~ q3.backlog.Orders ~ " unshipped orders are reported separately. Groups are compared only with orders of similar size, and each group's gap is measured against the best comparable group. A regression checks whether carrier differences survive once order size, destination and employee are taken into account.",
+   approach="For every shipped order we measured the days from order to dispatch and whether it went out after the customer's required date, then compared carriers, destinations, order sizes and deadline lengths. An adjusted comparison checked whether carrier differences still hold once order size and destination are taken into account.") }}
 
 <section class="plain" aria-labelledby="lim-h">
   <h2 id="lim-h">What this analysis can't tell us</h2>

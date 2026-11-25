@@ -62,6 +62,7 @@ header { margin-bottom: 48px; }
 /* Question sections */
 section.question { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 40px; margin: 0 0 56px; }
 .why { color: var(--ink-2); max-width: 64ch; margin-bottom: 28px; }
+.approach { color: var(--ink-2); max-width: 68ch; font-size: 0.95rem; margin: 0 0 20px; }
 .callout { border-radius: 12px; padding: 20px 24px; margin: 0 0 32px; }
 .callout .label { display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; margin-bottom: 6px; }
 .finding { background: var(--accent-soft); border-left: 4px solid var(--accent); }
@@ -159,7 +160,7 @@ footer { margin-top: 72px; padding-top: 24px; border-top: 1px solid var(--line);
   <p class="eyebrow">Northwind sample database · orders to 6 May 1998</p>
   <h1>Northwind: markets, stock and logistics</h1>
   <p class="lede">Three questions a manager can act on, answered from 830 orders placed between July 1996 and May 1998 by a small food importer and wholesaler.</p>
-  <p class="meta"><a href="https://github.com/alamergt/northwind-analysis">Code and data on GitHub</a> · Built 2026-11-25 00:38 UTC</p>
+  <p class="meta"><a href="https://github.com/alamergt/northwind-analysis">Code and data on GitHub</a> · Built 2026-11-25 00:40 UTC</p>
 </header>
 
 <section class="glance" aria-label="At a glance">
@@ -217,13 +218,15 @@ footer { margin-top: 72px; padding-top: 24px; border-top: 1px solid var(--line);
 
 <section class="question" id="q1" aria-labelledby="q1-h">
   <p class="eyebrow">Question 1 · Sales leadership</p>
-  <h2 id="q1-h">Which markets grew or declined, which accounts drove it, and where should sales attention go?</h2>
+  <h2 id="q1-h">How should Northwind prioritize its sales markets based on revenue performance and customer concentration risk?</h2>
   <p class="why"><strong>Why it matters.</strong> Sales attention is limited. This shows where extra effort is likely to pay off, and where revenue hangs on a single customer.</p>
 
   <div class="callout finding">
     <span class="label">Key finding</span>
     <p>Revenue grew +80% (between +42% and +116% depending on the quarters compared). Germany clearly gained share; Central Europe, France and Other North America clearly lost it. Brazil, UK &amp; Ireland and Nordics change direction depending on the quarters compared.</p>
   </div>
+
+  <p class="approach"><strong>Analytical approach.</strong> We compared each market&#39;s revenue in Q4 1997 + Q1 1998 with the same two quarters a year earlier, measured how its share of company revenue changed, and measured how much of it comes from its single largest customer. Those two measures place each market in one of six focus areas on the chart below.</p>
 
   <figure>
     <h3 class="chart-title">Where each market stands: share change against dependence on one customer</h3>
@@ -1399,6 +1402,8 @@ z
     <p>Stock on hand covers less than a month of recent demand for 38 of 69 active products, and 32 are Critical or High, assuming the undated stock count reflects 6 May 1998.</p>
   </div>
 
+  <p class="approach"><strong>Analytical approach.</strong> For each active product we compared stock on hand and on order with units sold per month over the last 90 days, placed it in an urgency tier by how many months of demand its stock covers, and ranked products within each tier by the monthly revenue at stake.</p>
+
   <figure>
     <h3 class="chart-title">How urgent each product is: demand against months of stock left</h3>
     <div class="chart"><svg role="img" aria-label="Scatter chart of 67 active products: recent monthly demand against months of stock on hand, coloured by tier. Top 10: 1. Côte de Blaye (Critical, 0.39 months); 2. Camembert Pierrot (Critical, 0.15 months); 3. Uncle Bob's Organic Dried Pears (Critical, 0.11 months); 4. Manjimup Dried Apples (Critical, 0.29 months); 5. Tarte au sucre (Critical, 0.22 months); 6. Vegie-spread (Critical, 0.48 months); 7. Fløtemysost (Critical, 0.27 months); 8. Mozzarella di Giovanni (Critical, 0.30 months); 9. Pavlova (Critical, 0.31 months); 10. Chai (Critical, 0.45 months)" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 518.4 360" xmlns="http://www.w3.org/2000/svg" version="1.1"><title>Scatter chart of 67 active products: recent monthly demand against months of stock on hand, coloured by tier. Top 10: 1. Côte de Blaye (Critical, 0.39 months); 2. Camembert Pierrot (Critical, 0.15 months); 3. Uncle Bob's Organic Dried Pears (Critical, 0.11 months); 4. Manjimup Dried Apples (Critical, 0.29 months); 5. Tarte au sucre (Critical, 0.22 months); 6. Vegie-spread (Critical, 0.48 months); 7. Fløtemysost (Critical, 0.27 months); 8. Mozzarella di Giovanni (Critical, 0.30 months); 9. Pavlova (Critical, 0.31 months); 10. Chai (Critical, 0.45 months)</title>
@@ -2524,6 +2529,8 @@ z
     <span class="label">Key finding</span>
     <p>Dispatch takes 6–7 days for nearly every order. 14-day orders are not processed any faster, so 18% of them go out late (likely range 10%–28%), against 4% for 28-day orders.</p>
   </div>
+
+  <p class="approach"><strong>Analytical approach.</strong> For every shipped order we measured the days from order to dispatch and whether it went out after the customer&#39;s required date, then compared carriers, destinations, order sizes and deadline lengths. An adjusted comparison checked whether carrier differences still hold once order size and destination are taken into account.</p>
 
   <figure>
     <h3 class="chart-title">Late dispatches by how much time the customer allowed</h3>

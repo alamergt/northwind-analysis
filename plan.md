@@ -14,6 +14,8 @@
 - Q3 is reworded to cover logistics efficiency more broadly.
 - A check of the public URL in a private (incognito) browser window and a fresh-clone reproduction test are added.
 
+**Question 1 wording (after publication review):** Q1 is now phrased as *How should Northwind prioritize its sales markets based on revenue performance and customer concentration risk?* The analysis, charts, findings and recommendations are unchanged, because they already answer it. Each question also now shows a short, visible *Analytical approach* paragraph right before its main chart.
+
 **Changes in revision 3 (Q1 only)**
 - The single Q1 label is replaced by two separate measures: **relative performance** (how a market's share of company revenue changed) and **concentration risk** (how much of the market depends on its largest customer). Together they map to one of six **recommended actions**.
 - Actions are recommendations to discuss, not final decisions.
@@ -28,7 +30,7 @@
 
 | # | Question | Who decides |
 |---|---|---|
-| Q1 | Which major markets grew or declined, which existing accounts drove the change, and where should sales attention go? | Sales leadership (VP Sales, Sales Manager) |
+| Q1 | How should Northwind prioritize its sales markets based on revenue performance and customer concentration risk? | Sales leadership (VP Sales, Sales Manager) |
 | Q2 | Which active products should purchasing restock first, given current stock relative to recent demand and what's already on order? | Purchasing / operations |
 | Q3 | How do order processing times and freight costs vary across shipments, and where are the greatest opportunities to improve logistics efficiency? | Operations / logistics |
 

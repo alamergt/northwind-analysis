@@ -249,3 +249,21 @@ def test_glossary_explains_terms(page):
     for term in ("Share of company revenue", "Concentration", "Months of stock", "Order-days",
                  "Likely range", "Adjusted comparison", "Resampling check"):
         assert term in page
+
+
+def test_q1_question_wording(page):
+    assert ("How should Northwind prioritize its sales markets based on revenue performance "
+            "and customer concentration risk?") in _section(page, "q1")
+    assert "grew or declined" not in page
+
+
+def test_five_assignment_parts_visible_before_details(page):
+    parts = ["<h2", "Why it matters", "Analytical approach", "<svg", "Key finding",
+             "Business interpretation"]
+    for qid in ("q1", "q2", "q3"):
+        visible = _section(page, qid)
+        visible = visible[:visible.index("<details")]
+        for part in parts:
+            assert part in visible, (qid, part)
+        assert visible.index("Analytical approach") < visible.index("<svg"), qid
+        assert visible.index("Why it matters") < visible.index("Analytical approach"), qid
