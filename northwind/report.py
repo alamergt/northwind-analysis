@@ -3,6 +3,7 @@
 import html
 import importlib.metadata
 import json
+import math
 import sys
 from datetime import datetime, timezone
 
@@ -74,8 +75,8 @@ def table(frame, columns):
             is numeric (right-aligned).
 
     Returns:
-        dict: ``headers`` (list of (text, numeric)) and ``rows`` (list of
-        lists of (text, numeric)).
+        dict: ``headers`` (list of (text, numeric)) and ``rows`` (list
+            of lists of (text, numeric)).
     """
     rows = []
     for _, record in frame.iterrows():
@@ -128,6 +129,14 @@ def q1_section(q1, charts):
     )
 
     def flags(row):
+        """Return the flag labels for one market, or a dash.
+
+        Args:
+            row (pandas.Series): Scorecard row.
+
+        Returns:
+            str: Flags joined by semicolons, or "—".
+        """
         return "; ".join(q1_flag_text(row)) or "—"
 
     # After the independent review: a market's share direction is only called
@@ -158,26 +167,35 @@ def q1_section(q1, charts):
     )
 
     def tentative(market):
-        row = card.set_index("Market").loc[market]
-        return (not steady.get(market, False)) or bool(row.get("FlagNotConclusive", False))
+        """Say whether a market's action should be marked tentative.
 
+        Args:
+            market (str): Market name.
+
+        Returns:
+            bool: True if its share direction changes between period
+            comparisons or its performance level isn't conclusive.
+        """
+        row = card.set_index("Market").loc[market]
+        # The concentration label is itself uncertain when the two ways of
+        # measuring dependence fall on opposite sides of the 50% line.
+        line = 0.5
+        straddles = (min(row["Dependence"], row["DependenceCompared"]) <= line
+                     < max(row["Dependence"], row["DependenceCompared"]))
+        hinges = row["RecommendedAction"] in ("Broaden", "Protect", "Rescue") and straddles
+        return ((not steady.get(market, False)) or bool(row.get("FlagNotConclusive", False))
+                or hinges)
+
+    order = ["Diagnose", "Rescue", "Broaden", "Invest"]
     actions = []
-    for action, verb in verbs.items():
-        rows_a = card[card["RecommendedAction"] == action]
-        if rows_a.empty:
-            continue
-        if action == "Rescue":
-            for r in rows_a.itertuples():
-                text = rescue_detail(card.set_index("Market").loc[r.Market], q1.movers, q1.company["Growth"])[0]
-                actions.append(text + (" (tentative)" if tentative(r.Market) else ""))
-            continue
-        firm = [m for m in rows_a["Market"] if not tentative(m)]
-        soft = [m for m in rows_a["Market"] if tentative(m)]
-        cap = verb[0].upper() + verb[1:]
-        if firm:
-            actions.append(f"{cap} {join_names(firm)}")
-        if soft:
-            actions.append(f"{cap} {join_names(soft)} (tentative)")
+    for action in order:
+        for r in card[card["RecommendedAction"] == action].itertuples():
+            text = market_action(card.set_index("Market").loc[r.Market], q1.movers)
+            lost = q1.movers[(q1.movers["Market"] == r.Market) & (q1.movers["Direction"] == "Loss")]
+            actions.append({"text": text, "market": r.Market,
+                            "status": "Tentative" if tentative(r.Market) else "Confirmed",
+                            "weight": float(-lost["Change"].min()) if not lost.empty else 0.0})
+    actions.sort(key=lambda a: (a["status"] != "Confirmed", -a["weight"]))
 
     rows = card.assign(Flags=card.apply(flags, axis=1),
                        ShareMove=card.apply(lambda r: f"{pct(r['SharePrior'], digits=1)} → "
@@ -203,7 +221,57 @@ def q1_section(q1, charts):
         "key": key,
         "meaning": meaning,
         "actions": actions,
+        "clear_gain": clear_gain,
+        "clear_loss": clear_loss,
+        "top_losses": [(r.CustomerName, r.Change, r.Market) for r in top_losses.itertuples()],
     }
+
+
+def market_action(row, movers):
+    """Write one specific action for a market: who to contact and why.
+
+    Args:
+        row (pandas.Series): Scorecard row (Market may be the index
+            name).
+        movers (pandas.DataFrame): Q1 movers table.
+
+    Returns:
+        str: Action naming the first account and the next step.
+    """
+    market = row.get("Market", row.name)
+    m = movers[movers["Market"] == market]
+    loss = m[m["Direction"] == "Loss"].sort_values("Change")
+    gain = m[(m["Direction"] == "Gain") & (m["CustomerName"] != row["TopCustomer"])]
+    gain = gain.sort_values("Change", ascending=False)
+    action = row["RecommendedAction"]
+    if action in ("Diagnose", "Rescue") and not loss.empty:
+        first = loss.iloc[0]
+        keep = (f"; keep {row['TopCustomer']} close" if action == "Rescue" else "")
+        return (f"{market}: call {first['CustomerName']} (revenue {money(first['Change'])}) "
+                f"to find out why orders fell{keep}")
+    if action == "Broaden":
+        nxt = join_names(gain["CustomerName"].head(2).tolist())
+        return (f"{market}: keep {row['TopCustomer']} close and grow "
+                + (f"{nxt}" if nxt else "other accounts")
+                + " so less depends on one buyer")
+    if action == "Invest":
+        top = m[m["Direction"] == "Gain"].sort_values("Change", ascending=False)
+        lead = top.iloc[0]["CustomerName"] if not top.empty else "the leading accounts"
+        return (f"{market}: confirm {lead}'s orders will continue, then add "
+                "sales coverage")
+    return f"{market}: {metrics_text(action)}"
+
+
+def metrics_text(action):
+    """Return the generic description of an action.
+
+    Args:
+        action (str): Action name.
+
+    Returns:
+        str: Description from the metrics module.
+    """
+    return metrics.ACTION_TEXT.get(action, action.lower())
 
 
 def rescue_detail(row, movers, company_growth=None):
@@ -216,8 +284,8 @@ def rescue_detail(row, movers, company_growth=None):
         row (pandas.Series): Scorecard row for the market (Market may be
             the index name).
         movers (pandas.DataFrame): Q1 movers table.
-        company_growth (float | None): Company growth, to say whether the
-            key account itself kept pace.
+        company_growth (float | None): Company growth, to say whether
+            the key account itself kept pace.
 
     Returns:
         tuple[str, str]: Short action for the summary, and an
@@ -263,6 +331,15 @@ def q1_interpretation(q1):
     same = q1.windows.set_index("Market")["SameDirection"].to_dict()
 
     def biggest(market, direction):
+        """Return the account with the largest change in one direction.
+
+        Args:
+            market (str): Market name.
+            direction (str): "Gain" or "Loss".
+
+        Returns:
+            str | None: "Name ($change)", or None if there is none.
+        """
         m = movers[(movers["Market"] == market) & (movers["Direction"] == direction)]
         if m.empty:
             return None
@@ -270,6 +347,14 @@ def q1_interpretation(q1):
         return f"{row['CustomerName']} ({money(row['Change'])})"
 
     def share(market):
+        """Return a market's share of revenue before and after.
+
+        Args:
+            market (str): Market name.
+
+        Returns:
+            str: e.g. "10.6% → 19.7%".
+        """
         r = card.loc[market]
         return f"{pct(r['SharePrior'], digits=1)} → {pct(r['ShareCurrent'], digits=1)}"
 
@@ -313,7 +398,7 @@ def q1_interpretation(q1):
 
 
 def shortfall_range(short):
-    """Units the top products need to reach one month of demand, two ways.
+    """Return the top products' shortfall to one month of demand.
 
     Args:
         short (pandas.DataFrame): Q2 shortlist.
@@ -385,9 +470,9 @@ def q3_facts(q3):
     """Collect the Q3 figures the page text is built from.
 
     Wording follows the independent review: typical times are given as a
-    range, the slow-tail share of late orders is not used (it is close to
-    automatic for 28-day orders), carrier differences are described as more
-    very slow orders, and freight comparisons as inconclusive.
+    range, the slow-tail share of late orders is not used (it is close
+    to automatic for 28-day orders), carrier differences are described
+    as more very slow orders, and freight comparisons as inconclusive.
 
     Args:
         q3 (northwind.q3_logistics.Q3Result): Q3 results.
@@ -439,7 +524,7 @@ def q3_interpretation(q3):
         f"{f['slow_cutoff']:.0f} days), not slow processing in general.",
         f"Orders with a {f['short']}-day deadline are not processed any faster (median {f['median_short']:g} days, "
         f"against {f['median_common']:g} for {f['common']}-day orders), so {pct(f['late_short'])} of them go out late "
-        f"(95% range {pct(f['late_low'])}–{pct(f['late_high'])}; {f['late_short_n']} of the {f['late_total']} "
+        f"(likely range {pct(f['late_low'])}–{pct(f['late_high'])}; {f['late_short_n']} of the {f['late_total']} "
         "late dispatches). Sorting the dispatch queue by required date is a low-cost change aimed at these.",
     ]
     if f["worse"]:
@@ -527,13 +612,70 @@ def q2_section(q2, charts, config):
                     "rates (median product) and reorder levels haven't kept up: this is a catalogue-wide "
                     "replenishment gap, not a few exceptions."),
         "actions": [
-            f"Order the top {len(short)} now (roughly {num(shortfall_range(short)[0])}–"
-            f"{num(shortfall_range(short)[1])} units, depending on the demand period used)",
-            f"Set reorder levels for the {len(q2.no_reorder_rule)} products without one",
-            f"Verify the {int(q2.watch_list['FlagPossibleShortage'].sum())} possible shortages "
-            "(unshipped orders exceed stock)",
+            {"text": f"Order the top {config.buy_list_size} products this week, in the quantities "
+                     "listed below the chart", "status": "Confirmed"},
+            {"text": f"Set reorder levels for the {len(q2.no_reorder_rule)} active products "
+                     "without one, using the suggested levels in the appendix", "status": "Confirmed"},
+            {"text": f"Check the {int(q2.watch_list['FlagPossibleShortage'].sum())} products where "
+                     "unshipped orders exceed stock, starting with "
+                     + join_names(q2.watch_list.loc[q2.watch_list["FlagPossibleShortage"], "ProductName"]
+                                  .head(2).tolist()),
+             "status": "To verify"},
         ],
+        "buy_list": table(buy_list(short, config.buy_list_size), [
+            ("#", "Rank", None, True),
+            ("Product", "ProductName", None, False),
+            ("In stock", "UnitsInStock", num, True),
+            ("On order", "UnitsOnOrder", num, True),
+            ("Sold per month (recent)", "RecentMonthlyDemand", num, True),
+            ("Order now (units)", "OrderRange", None, True),
+            ("Revenue at stake / month", "RevenueAtRisk", money, True),
+        ]),
     }
+
+
+def buy_list(short, size):
+    """Return the top products with how many units to order.
+
+    The order range runs from the units needed to cover one month at
+    long-run demand to the units needed at recent (peak) demand.
+
+    Args:
+        short (pandas.DataFrame): Q2 shortlist, in rank order.
+        size (int): Number of products to list.
+
+    Returns:
+        pandas.DataFrame: Top rows with an OrderRange column.
+    """
+    top = short.head(size).copy()
+    available = top["UnitsInStock"] + top["UnitsOnOrder"]
+    low = (top["LongRunMonthlyDemand"] - available).clip(lower=0).apply(math.ceil)
+    high = (top["RecentMonthlyDemand"] - available).clip(lower=0).apply(math.ceil)
+    top["OrderRange"] = [f"{min(a, b):,}–{max(a, b):,}" if a != b else f"{a:,}"
+                         for a, b in zip(low, high)]
+    return top
+
+
+def q3_actions(q3, f):
+    """Write the Q3 actions, each naming what to look at first.
+
+    Args:
+        q3 (northwind.q3_logistics.Q3Result): Q3 results.
+        f (dict): Output of ``q3_facts``.
+
+    Returns:
+        list[dict]: Actions with text and status.
+    """
+    out = [{"text": "Sort the daily dispatch queue by required date, so "
+                    f"{f['short']}-day orders go first", "status": "Confirmed"}]
+    if f["worse"]:
+        carriers = q3.breakdowns["Carrier"].set_index("ShipperName")
+        first = f["worse"][0]
+        n = int(carriers.loc[first, "SlowOrders"])
+        out.append({"text": f"Pull the {n} {first} orders that waited over {f['slow_cutoff']:.0f} days "
+                            "and compare when each was ready with when it was collected",
+                    "status": "To verify"})
+    return out
 
 
 def q3_section(q3, charts):
@@ -576,7 +718,7 @@ def q3_section(q3, charts):
         "interpretation": q3_interpretation(q3),
         "key": (f"Dispatch takes {f['median_low']:.0f}–{f['median_high']:.0f} days for nearly every order. "
                 f"{f['short']}-day orders are not processed any faster, so {pct(f['late_short'])} of them go out late "
-                f"(95% range {pct(f['late_low'])}–{pct(f['late_high'])}), against {pct(f['late_common'])} for "
+                f"(likely range {pct(f['late_low'])}–{pct(f['late_high'])}), against {pct(f['late_common'])} for "
                 f"{f['common']}-day orders."),
         "meaning": ("The problem is a small number of very slow orders in Northwind's own dispatch process"
                     + (f", which are more common for {join_names(f['worse'])} shipments" if f["worse"] else "")
@@ -584,9 +726,7 @@ def q3_section(q3, charts):
                               "destination, so the data doesn't support changing carriers on cost."
                               if not f["freight_material"]
                               else "Some carrier freight differences remain after adjustment.")),
-        "actions": ["Sort the dispatch queue by required date"]
-                   + ([f"Find out why {join_names(f['worse'])} shipments more often wait over "
-                       f"{f['slow_cutoff']:.0f} days (e.g. pickup schedules)"] if f["worse"] else []),
+        "actions": q3_actions(q3, f),
     }
     section["answer"] = section["meaning"]
     return section
@@ -604,6 +744,15 @@ def _regression_text(regression):
         pandas.DataFrame: Copy with EffectText and IntervalText.
     """
     def fmt(model, value):
+        """Format a regression effect in its model's unit.
+
+        Args:
+            model (str): "Freight" (percent) or "Dispatch" (days).
+            value (float): Effect or interval bound.
+
+        Returns:
+            str: Formatted value.
+        """
         return pct(value, True, 1) if model == "Freight" else f"{value:+.1f} days".replace("-", "−")
 
     out = regression.copy()
@@ -726,8 +875,8 @@ def load_review(path=None):
             verification/fresh_review.json.
 
     Returns:
-        list[dict]: Items with claim, severity, objection and resolution;
-        empty if the review hasn't been recorded.
+        list[dict]: Items with claim, severity, objection and
+        resolution; empty if the review hasn't been recorded.
     """
     path = path or ROOT / "verification" / "fresh_review.json"
     if not path.exists():
@@ -736,6 +885,78 @@ def load_review(path=None):
 
 
 # --- Page ---------------------------------------------------------------------
+
+def summary_cards(q1, q2, q3, s1, s2, s3, config):
+    """Build the summary cards and the ranked management priorities.
+
+    Each card has one large metric, one finding and one action, taken
+    from its section so the two can't disagree. Priorities are ranked by
+    how certain the evidence is, how much money is at stake each month
+    and how quickly the step can be taken.
+
+    Args:
+        q1 (northwind.q1_markets.Q1Result): Q1 results.
+        q2 (northwind.q2_inventory.Q2Result): Q2 results.
+        q3 (northwind.q3_logistics.Q3Result): Q3 results.
+        s1 (dict): Q1 section context.
+        s2 (dict): Q2 section context.
+        s3 (dict): Q3 section context.
+        config (northwind.config.Config): Settings.
+
+    Returns:
+        tuple[list[dict], list[dict]]: Summary cards and priorities.
+    """
+    watch, short = q2.watch_list, q2.shortlist
+    urgent = int(watch["Tier"].isin(["Critical", "High"]).sum())
+    thin = int((watch["CoverOnHand"] < config.high_cover).sum())
+    f = q3_facts(q3)
+    first_q1 = next(a for a in s1["actions"] if a["status"] == "Confirmed")
+    top3 = join_names(short["ProductName"].head(3).tolist())
+    cards = [
+        {"label": "Markets", "anchor": "q1",
+         "metric": pct(q1.company["Growth"], True), "metric_label": "revenue growth, year on year",
+         "finding": (f"Only {join_names(s1['clear_gain'])} clearly gained share; "
+                     f"{join_names(s1['clear_loss'])} clearly lost it."),
+         "action": first_q1},
+        {"label": "Stock", "anchor": "q2",
+         "metric": f"{urgent} of {len(watch)}", "metric_label": "active products at critical or high stock risk",
+         "finding": (f"Stock covers less than a month of recent demand for {thin} products "
+                     "(assuming the undated stock count reflects 6 May 1998)."),
+         "action": {"text": f"Order {top3} this week; quantities are under the stock chart",
+                    "status": "Confirmed"}},
+        {"label": "Logistics", "anchor": "q3",
+         "metric": pct(f["late_short"]),
+         "metric_label": f"of {f['short']}-day orders dispatched late, against {pct(f['late_common'])} "
+                         f"of {f['common']}-day orders",
+         "finding": (f"Short-deadline orders get no priority; typical dispatch takes "
+                     f"{f['median_low']:.0f}–{f['median_high']:.0f} days everywhere."),
+         "action": s3["actions"][0]},
+    ]
+    at_stake = short["RevenueAtRisk"].sum()
+    days = max(1, round(short["CoverOnHand"].min() * config.days_per_month))
+    confirmed = {a["market"] for a in s1["actions"] if a["status"] == "Confirmed"}
+    losses = [loss for loss in s1["top_losses"] if loss[2] in confirmed]
+    priorities = [
+        {"rank": 1, "owner": "Purchasing", "status": "Confirmed",
+         "title": f"Restock the top {len(short)} products",
+         "why": (f"About {money(at_stake)} of sales a month depend on them, and the most urgent "
+                 f"has roughly {days} days of stock left."),
+         "next": f"Place orders for the top {config.buy_list_size} this week (quantities in question 2)."},
+        {"rank": 2, "owner": "Operations", "status": "Confirmed",
+         "title": "Put short-deadline orders first in the dispatch queue",
+         "why": (f"{f['short']}-day orders go out late {pct(f['late_short'])} of the time, against "
+                 f"{pct(f['late_common'])}, and the change costs almost nothing."),
+         "next": (f"Sort the daily pick list by required date; check in a month that the "
+                  f"{f['short']}-day late rate has fallen.")},
+        {"rank": 3, "owner": "Sales", "status": "Confirmed",
+         "title": "Win back the accounts behind the confirmed market losses",
+         "why": (f"{join_names([n for n, _, _ in losses])} together bought "
+                 f"{money(-sum(c for _, c, _ in losses))} less in the latest half-year than a year "
+                 "earlier, in markets that lost share in every period compared."),
+         "next": "Account managers call each of them this month to find out why orders fell."},
+    ]
+    return cards, priorities
+
 
 def build_context(q1, q2, q3, charts, checks, config, input_sha256):
     """Assemble everything the template needs.
@@ -753,13 +974,7 @@ def build_context(q1, q2, q3, charts, checks, config, input_sha256):
         dict: Template context.
     """
     s1, s2, s3 = q1_section(q1, charts), q2_section(q2, charts, config), q3_section(q3, charts)
-    # The summary reuses each section's own key finding and actions, so the
-    # two can never disagree.
-    summary = [
-        {"label": "Markets", "anchor": "q1", "finding": s1["key"], "actions": s1["actions"]},
-        {"label": "Stock", "anchor": "q2", "finding": s2["key"], "actions": s2["actions"]},
-        {"label": "Logistics", "anchor": "q3", "finding": s3["key"], "actions": s3["actions"]},
-    ]
+    summary, priorities = summary_cards(q1, q2, q3, s1, s2, s3, config)
     versions = {lib: importlib.metadata.version(lib) for lib in LIBRARIES}
     return {
         "title": "Northwind: markets, stock and logistics",
@@ -770,6 +985,8 @@ def build_context(q1, q2, q3, charts, checks, config, input_sha256):
         "versions": versions,
         "repo_url": config.repo_url,
         "summary": summary,
+        "priorities": priorities,
+        "buy_list_size": config.buy_list_size,
         "q1": s1, "q2": s2, "q3": s3,
         "appendix": appendix(q1, q2, q3, charts, checks),
         "shortlist_size": config.shortlist_size,

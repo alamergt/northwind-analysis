@@ -47,7 +47,8 @@ def validate_schema(sheets):
     """Check that every required sheet and column is present.
 
     Args:
-        sheets (dict[str, pandas.DataFrame]): Sheets keyed by sheet name.
+        sheets (dict[str, pandas.DataFrame]): Sheets keyed by sheet
+            name.
 
     Returns:
         None.

@@ -295,8 +295,8 @@ def recommended_action(performance, risk, orders_prior, orders_current, config):
 def recent_monthly_demand(lines, cutoff, window_days, days_per_month):
     """Return units ordered per month over the recent window, per product.
 
-    The window is the ``window_days`` calendar days ending on ``cutoff``,
-    both ends included.
+    The window is the ``window_days`` calendar days ending on
+    ``cutoff``, both ends included.
 
     Args:
         lines (pandas.DataFrame): Order lines with ProductID, OrderDate
@@ -346,8 +346,8 @@ def demand_variability(lines, first_month, last_month):
         last_month (str): Last full month, e.g. "1998-04".
 
     Returns:
-        pandas.Series: Std / mean of monthly units, indexed by ProductID;
-        NaN where mean demand is zero.
+        pandas.Series: Std / mean of monthly units, indexed by
+            ProductID; NaN where mean demand is zero.
     """
     months = pd.period_range(first_month, last_month, freq="M")
     month = lines["OrderDate"].dt.to_period("M")
@@ -372,7 +372,8 @@ def months_of_cover(stock, monthly_demand):
         monthly_demand (pandas.Series): Units demanded per month.
 
     Returns:
-        pandas.Series: ``stock / monthly_demand``; NaN where demand is 0.
+        pandas.Series: ``stock / monthly_demand``; NaN where demand is
+            0.
     """
     demand = monthly_demand.astype(float)
     return (stock / demand.where(demand > 0)).astype(float)
@@ -416,7 +417,8 @@ def processing_days(order_date, shipped_date):
 
     Args:
         order_date (pandas.Series): Order dates.
-        shipped_date (pandas.Series): Dispatch dates; NaT if not shipped.
+        shipped_date (pandas.Series): Dispatch dates; NaT if not
+            shipped.
 
     Returns:
         pandas.Series: Days as floats; NaN for unshipped orders.
@@ -429,10 +431,12 @@ def slack_days(required_date, shipped_date):
 
     Args:
         required_date (pandas.Series): Required dates.
-        shipped_date (pandas.Series): Dispatch dates; NaT if not shipped.
+        shipped_date (pandas.Series): Dispatch dates; NaT if not
+            shipped.
 
     Returns:
-        pandas.Series: Positive = early, negative = late; NaN if unshipped.
+        pandas.Series: Positive = early, negative = late; NaN if
+            unshipped.
     """
     return (required_date - shipped_date).dt.days.astype(float)
 
@@ -484,7 +488,8 @@ def size_band_edges(units):
         units (pandas.Series): Units per order, all orders.
 
     Returns:
-        numpy.ndarray: Five edges: min, 25th, 50th, 75th percentile, max.
+        numpy.ndarray: Five edges: min, 25th, 50th, 75th percentile,
+            max.
 
     Raises:
         ValueError: If edges are not strictly increasing.
@@ -525,7 +530,8 @@ def excess_over_benchmark(values, benchmark, weights=None):
             for freight per unit; None means 1.
 
     Returns:
-        float: Sum of ``max(0, value - benchmark) * weight``, ignoring NaN.
+        float: Sum of ``max(0, value - benchmark) * weight``, ignoring
+            NaN.
     """
     excess = (values - benchmark).clip(lower=0)
     if weights is not None:

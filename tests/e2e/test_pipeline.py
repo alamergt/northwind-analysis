@@ -97,7 +97,8 @@ def test_one_primary_chart_visible_per_question(page):
         section = _section(page, qid)
         visible = section[:section.index("<details")]
         assert visible.count("<svg") == 1, qid
-        assert "<table" not in visible, qid
+        # Only Q2 shows a table up front: the top products to order.
+        assert visible.count("<table") == (1 if qid == "q2" else 0), qid
 
 
 def test_shortages_are_not_called_confirmed_backorders(page):
@@ -178,23 +179,73 @@ def test_q3_does_not_overstate(page):
     assert "median 7 days everywhere" not in q3
     assert "97%" not in q3
     assert "inconclusive" in q3
-    assert "95% range" in q3
+    assert "likely range" in q3
 
 
 def test_q1_separates_clear_from_tentative(page):
     q1 = _text(_section(page, "q1"))
     assert "depending on the quarters compared" in q1
-    assert "(tentative)" in q1
+    assert "Tentative" in q1 and "Confirmed" in q1
     assert "borderline" in q1
 
 
 def test_q2_states_assumption_and_range(page):
     q2 = _text(_section(page, "q2"))
     assert "assuming the undated stock count" in q2
-    assert re.search(r"roughly \d+–\d+ units", q2)
+    assert re.search(r"roughly \d+–\d+ (more )?units", q2)
     assert "none has an order in progress" not in q2
 
 
 def test_review_listed_in_appendix(page):
     assert "Independent review" in page
     assert page.count("Resolution:") >= 10
+
+
+# --- Executive revisions -------------------------------------------------------
+
+def test_summary_cards_have_one_metric_finding_and_action(page):
+    glance = page[page.index('class="glance"'):page.index('class="priorities"')]
+    cards = glance.split("<article>")[1:]
+    assert len(cards) == 3
+    for card in cards:
+        assert card.count('class="metric"') == 1
+        assert card.count('class="card-action"') == 1
+        assert "<ul" not in card
+
+
+def test_three_ranked_priorities_all_confirmed(page):
+    prio = page[page.index('class="priorities"'):page.index('class="legend-note"')]
+    assert [int(r) for r in re.findall(r'class="rank">(\d)<', prio)] == [1, 2, 3]
+    assert prio.count("Next step:") == 3
+    assert prio.count('class="badge confirmed"') == 3
+    assert len(set(re.findall(r'class="owner">(\w+)', prio))) == 3
+
+
+def test_q1_chart_guide_explains_axes_and_six_categories(page):
+    q1 = _text(_section(page, "q1"))
+    assert "How to read this chart" in q1 and "Across:" in q1 and "Up:" in q1
+    for category in ("Rescue", "Protect", "Broaden", "Diagnose", "Maintain", "Invest"):
+        assert category in q1
+
+
+def test_q1_actions_name_an_account(page):
+    q1 = _section(page, "q1")
+    actions = _text(q1[q1.index("Recommended action"):q1.index("<details")])
+    assert "call " in actions and "to find out why orders fell" in actions
+
+
+def test_q2_buy_list_and_selection_rule(page):
+    q2 = _section(page, "q2")
+    visible = q2[:q2.index("<details")]
+    buy = visible[visible.index('class="buy"'):]
+    assert buy.count("<tr>") == 1 + 5
+    assert "Order now (units)" in buy
+    text = _text(buy)
+    assert "urgency tier" in text and "ranked by monthly revenue at stake" in text
+
+
+def test_glossary_explains_terms(page):
+    assert "Terms in plain English" in page
+    for term in ("Share of company revenue", "Concentration", "Months of stock", "Order-days",
+                 "Likely range", "Adjusted comparison", "Resampling check"):
+        assert term in page

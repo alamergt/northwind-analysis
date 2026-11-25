@@ -82,28 +82,32 @@ class Config:
 
     Attributes:
         workbook (pathlib.Path): Input Excel workbook.
-        output_dir (pathlib.Path): Folder for generated tables and manifest.
+        output_dir (pathlib.Path): Folder for generated tables and
+            manifest.
         docs_dir (pathlib.Path): Folder served by GitHub Pages.
         cutoff (pandas.Timestamp): Last order date; all recent windows
             end here.
         first_full_quarter (str): First complete calendar quarter.
         last_full_quarter (str): Last complete calendar quarter.
-        current_window (tuple[str, ...]): Quarters in the Q1 growth window.
+        current_window (tuple[str, ...]): Quarters in the Q1 growth
+            window.
         prior_window (tuple[str, ...]): Same quarters one year earlier.
-        outperform_threshold (float): Relative growth at or above which a
-            market is Outperforming.
-        underperform_threshold (float): Relative growth at or below which
-            a market is Underperforming.
+        outperform_threshold (float): Relative growth at or above which
+            a market is Outperforming.
+        underperform_threshold (float): Relative growth at or below
+            which a market is Underperforming.
         concentration_threshold (float): Largest-customer share above
             which concentration risk is High.
         concentration_flag_margin (float): Dependence within this
             distance of the threshold is flagged as near the line.
-        narrow_growth_share (float): One account supplying more than this
-            share of a market's increase is flagged as narrow growth.
+        narrow_growth_share (float): One account supplying more than
+            this share of a market's increase is flagged as narrow
+            growth.
         min_orders_per_window (int): Fewer orders than this in either
             window gives "Insufficient data".
         near_threshold_margin (float): Relative growth this close to a
-            performance threshold triggers the bootstrap check (plan 4.4).
+            performance threshold triggers the bootstrap check (plan
+            4.4).
         bootstrap_resamples (int): Resamples for the bootstrap check.
         bootstrap_interval (float): Width of the bootstrap interval.
         movers_per_side (int): Gaining and losing accounts listed per
@@ -116,24 +120,27 @@ class Config:
             for demand variability.
         critical_cover (float): Months of cover (incl. on order) below
             which a product is Critical.
-        high_cover (float): Months of on-hand cover below which a product
-            can be High.
-        watch_cover (float): Months of on-hand cover used by Watch rules.
+        high_cover (float): Months of on-hand cover below which a
+            product can be High.
+        watch_cover (float): Months of on-hand cover used by Watch
+            rules.
         high_variability (float): Coefficient of variation above which
             demand counts as erratic.
         lead_time_scenarios (tuple[float, ...]): Assumed lead times in
             months for suggested reorder levels.
         shortlist_size (int): Products shown on the main page for Q2.
+        buy_list_size (int): Products listed with order quantities.
         slow_quantile (float): Quantile of processing days that defines
             a slow order.
-        consolidation_share (float): Freight share of revenue above which
-            a small order is a consolidation candidate.
+        consolidation_share (float): Freight share of revenue above
+            which a small order is a consolidation candidate.
         min_group_orders_per_band (int): Orders a group needs in a size
             band to serve as that band's benchmark.
         min_opportunity_orders (int): Opportunities resting on fewer
             orders get a bootstrap check (plan 4.4).
         region_mix_tolerance (float): Largest acceptable gap between
-            carriers' destination shares before the regression check runs.
+            carriers' destination shares before the regression check
+            runs.
         freight_materiality (float): Carrier freight difference that
             counts as material.
         dispatch_materiality_days (float): Carrier dispatch difference
@@ -176,6 +183,7 @@ class Config:
     high_variability: float = 1.5
     lead_time_scenarios: tuple[float, ...] = (0.5, 1.0, 2.0)
     shortlist_size: int = 10
+    buy_list_size: int = 5
     slow_quantile: float = 0.90
     consolidation_share: float = 0.15
     min_group_orders_per_band: int = 10

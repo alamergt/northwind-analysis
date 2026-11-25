@@ -1,5 +1,9 @@
-"""Q1: how markets performed relative to the company, how concentrated
-they are, and where sales attention could go (plan.md section 3.2)."""
+"""Q1: rate markets on share change and customer concentration.
+
+Shows how each market performed relative to the company, how much it
+depends on one customer, and where sales attention could go
+(plan.md section 3.2).
+"""
 
 from dataclasses import dataclass
 
@@ -23,10 +27,11 @@ class Q1Result:
     """Outputs of the Q1 market analysis.
 
     Attributes:
-        quarterly (pandas.DataFrame): Revenue, orders, customers and share
-            of company revenue per market and quarter.
-        scorecard (pandas.DataFrame): One row per market: growth, relative
-            growth, drivers, concentration, recommended action and flags.
+        quarterly (pandas.DataFrame): Revenue, orders, customers and
+            share of company revenue per market and quarter.
+        scorecard (pandas.DataFrame): One row per market: growth,
+            relative growth, drivers, concentration, recommended action
+            and flags.
         movers (pandas.DataFrame): Largest gaining and losing accounts
             per market.
         company (dict): Company-wide revenue, orders and growth.
@@ -36,8 +41,8 @@ class Q1Result:
             markets that met a plan 4.4 trigger; empty if none did.
         uncertainty (pandas.DataFrame): Relative-growth intervals for
             every market, for the appendix.
-        summaries (dict[str, str]): One plain-language recommendation per
-            market.
+        summaries (dict[str, str]): One plain-language recommendation
+            per market.
         caveat (str): Uncertainty statement shown with the Q1 results.
     """
 
@@ -156,8 +161,8 @@ def _trend(series):
         series (pandas.Series): Values in time order; NaN are dropped.
 
     Returns:
-        float: Least-squares slope divided by the mean; NaN if fewer than
-        two values or the mean is not positive.
+        float: Least-squares slope divided by the mean; NaN if fewer
+            than two values or the mean is not positive.
     """
     values = series.dropna().to_numpy(dtype=float)
     if len(values) < 2 or values.mean() <= 0:
@@ -181,8 +186,9 @@ def _sign(value):
 def scorecard(lines, config, current=None, prior=None):
     """Score every market on relative performance and concentration.
 
-    Company totals are taken from ``lines`` itself, so alternative inputs
-    (e.g. a customer removed) are compared with their own company total.
+    Company totals are taken from ``lines`` itself, so alternative
+    inputs (e.g. a customer removed) are compared with their own company
+    total.
 
     Args:
         lines (pandas.DataFrame): Output of ``prepare_lines``.
@@ -365,9 +371,11 @@ def performance_confidence(card, lines, config):
     in which case "Not conclusive".
 
     Args:
-        card (pandas.DataFrame): Output of ``scorecard``; modified in place.
+        card (pandas.DataFrame): Output of ``scorecard``; modified in
+            place.
         lines (pandas.DataFrame): Output of ``prepare_lines``.
-        config (northwind.config.Config): Thresholds and bootstrap settings.
+        config (northwind.config.Config): Thresholds and bootstrap
+            settings.
 
     Returns:
         pandas.DataFrame: One row per triggered market with the reason
@@ -401,7 +409,8 @@ def uncertainty_table(card, lines, config):
     Args:
         card (pandas.DataFrame): Scorecard.
         lines (pandas.DataFrame): Output of ``prepare_lines``.
-        config (northwind.config.Config): Thresholds and bootstrap settings.
+        config (northwind.config.Config): Thresholds and bootstrap
+            settings.
 
     Returns:
         pandas.DataFrame: Market, RelativeGrowth, Low, High, Performance
@@ -460,9 +469,10 @@ def robustness(model, lines, card, config):
 def window_check(lines, config):
     """Check whether each market's share moved the same way in other periods.
 
-    Compares the base two-quarter windows with the latest quarter against
-    the same quarter a year earlier, and with the quarter before that
-    against its year-earlier quarter (added after the independent review).
+    Compares the base two-quarter windows with the latest quarter
+    against the same quarter a year earlier, and with the quarter before
+    that against its year-earlier quarter (added after the independent
+    review).
 
     Args:
         lines (pandas.DataFrame): Output of ``prepare_lines``.
@@ -470,8 +480,8 @@ def window_check(lines, config):
 
     Returns:
         tuple[pandas.DataFrame, dict]: Relative growth per market under
-        each comparison with a SameDirection flag, and company growth per
-        comparison.
+        each comparison with a SameDirection flag, and company growth
+        per comparison.
     """
     last = pd.Period(config.last_full_quarter, freq="Q")
     pairs = {

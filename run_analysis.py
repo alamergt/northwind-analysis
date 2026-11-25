@@ -1,8 +1,11 @@
-"""Build every output from the workbook: python run_analysis.py
+"""Build every output from the workbook.
 
-Builds the model, runs Q1-Q3, cross-checks the results in SQL, renders the
-charts and writes the page to docs/index.html. Exits with status 1 if any
-cross-check fails.
+Usage:
+    python run_analysis.py
+
+Builds the model, runs Q1-Q3, cross-checks the results in SQL, renders
+the charts and writes the page to docs/index.html. Exits with status 1
+if any cross-check fails.
 """
 
 import json

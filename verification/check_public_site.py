@@ -1,6 +1,9 @@
-"""Check the published page and repository as an anonymous visitor (plan.md §8.5).
+"""Check the published page and repository anonymously.
 
-Uses only the Python standard library: no cookies, no tokens, no sign-in.
+Implements plan.md §8.5 as an anonymous visitor would see it.
+
+Uses only the Python standard library: no cookies, no tokens, no
+sign-in.
 
 Checks:
 1. The page URL returns HTTP 200 over HTTPS.
@@ -62,6 +65,16 @@ def main():
     results = []
 
     def record(name, ok, detail):
+        """Add one check result.
+
+        Args:
+            name (str): Check description.
+            ok (bool): Whether it passed.
+            detail (str): Evidence shown in the report.
+
+        Returns:
+            None.
+        """
         results.append({"check": name, "pass": bool(ok), "detail": detail})
 
     status, body, final = fetch(PAGE_URL)

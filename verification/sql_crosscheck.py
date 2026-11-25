@@ -1,4 +1,4 @@
-"""Recalculate control totals with openpyxl + SQLite and compare with the model.
+"""Recalculate headline figures in SQL and compare with the model.
 
 This path shares no code with the pandas pipeline: the workbook is read
 cell by cell with openpyxl and every figure is computed in plain SQL.

@@ -1,5 +1,8 @@
-"""Q3: how processing time and freight vary across shipments, and where
-the biggest logistics improvements are (plan.md sections 3.5-3.7, 4)."""
+"""Q3: compare processing time and freight across shipments.
+
+Shows how they vary and where the biggest logistics improvements are
+(plan.md sections 3.5-3.7 and 4).
+"""
 
 from dataclasses import dataclass
 
@@ -40,8 +43,8 @@ class Q3Result:
         opportunities (pandas.DataFrame): Processing and freight gaps,
             ranked within each type.
         backlog (dict): The unshipped orders.
-        consolidation (dict): Small orders where freight is a large share
-            of revenue.
+        consolidation (dict): Small orders where freight is a large
+            share of revenue.
         late_by_window (pandas.DataFrame): Late dispatches by the
             customer's allowed window.
         deadlines (dict): Whether short-deadline orders are prioritised.
@@ -52,8 +55,8 @@ class Q3Result:
             alternative definitions (plan 8.3).
         regression_without_slow (pandas.DataFrame): The carrier
             regression with the slowest 10% of orders removed.
-        slow_share_by_carrier (dict[str, float]): Share of each carrier's
-            orders that are slow.
+        slow_share_by_carrier (dict[str, float]): Share of each
+            carrier's orders that are slow.
         caveat (str): Statement shown with the Q3 results.
     """
 
@@ -99,9 +102,9 @@ def breakdown(orders, col):
         col (str): Grouping column.
 
     Returns:
-        pandas.DataFrame: Orders, processing median/mean/90th percentile,
-        slow and late counts and shares, freight per unit and share
-        medians, and total freight per group.
+        pandas.DataFrame: Orders, processing median/mean/90th
+            percentile, slow and late counts and shares, freight per
+            unit and share medians, and total freight per group.
     """
     table = orders.groupby(col, observed=True).agg(
         Orders=("OrderID", "size"),
@@ -210,8 +213,9 @@ def opportunities(orders, config, band_col="SizeBand", benchmark="best"):
 
     Returns:
         pandas.DataFrame: One row per positive opportunity with Type
-        (Processing in order-days, Freight in dollars), Dimension, Group,
-        Size, Orders, SizePerOrder and Action; ranked within each Type.
+            (Processing in order-days, Freight in dollars), Dimension,
+            Group, Size, Orders, SizePerOrder and Action; ranked within
+            each Type.
     """
     specs = [("Processing", dim, col, "ProcessingDays", None) for dim, col in DIMENSIONS.items()]
     specs.append(("Freight", "Carrier", DIMENSIONS["Carrier"], "FreightPerUnit", "Units"))
@@ -249,8 +253,8 @@ def backlog(model, config):
         config (northwind.config.Config): Cutoff.
 
     Returns:
-        dict: Orders, revenue held, units, median and oldest age in days,
-        and how many are already past their required date.
+        dict: Orders, revenue held, units, median and oldest age in
+            days, and how many are already past their required date.
     """
     open_orders = model.orders[~model.orders["IsShipped"]]
     age = (config.cutoff - open_orders["OrderDate"]).dt.days
@@ -273,8 +277,9 @@ def consolidation(orders, config):
         config (northwind.config.Config): Freight-share threshold.
 
     Returns:
-        dict: Candidate orders, their freight, that freight's share of all
-        freight, and whether it is material (at least 1% of freight).
+        dict: Candidate orders, their freight, that freight's share of
+            all freight, and whether it is material (at least 1% of
+            freight).
     """
     small = orders[orders["SizeBand"] == metrics.SIZE_BAND_LABELS[0]]
     candidates = small[small["FreightShare"] > config.consolidation_share]
@@ -342,7 +347,8 @@ def _design(orders, categorical, numeric, baselines):
         orders (pandas.DataFrame): Shipped orders.
         categorical (list[str]): Columns to dummy-code.
         numeric (dict[str, pandas.Series]): Extra numeric columns.
-        baselines (dict[str, str]): Reference level per categorical column.
+        baselines (dict[str, str]): Reference level per categorical
+            column.
 
     Returns:
         pandas.DataFrame: Design matrix.
@@ -488,7 +494,8 @@ def flag_small_opportunities(opps, orders, config):
     """Add a confidence column; bootstrap opportunities on few orders.
 
     Args:
-        opps (pandas.DataFrame): Output of ``opportunities``; modified in place.
+        opps (pandas.DataFrame): Output of ``opportunities``; modified
+            in place.
         orders (pandas.DataFrame): Shipped orders.
         config (northwind.config.Config): Threshold, seed and resamples.
 

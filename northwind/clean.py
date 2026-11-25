@@ -16,15 +16,17 @@ DISCOUNT_DECIMALS = 2
 def clean_tables(raw):
     """Return cleaned copies of the workbook sheets.
 
-    Drops leftover columns, rounds discounts, parses order dates (missing
-    ShippedDate stays missing) and makes Discontinued a boolean. The
-    input is not modified.
+    Drops leftover columns, rounds discounts, parses order dates
+    (missing ShippedDate stays missing) and makes Discontinued a
+    boolean. The input is not modified.
 
     Args:
-        raw (dict[str, pandas.DataFrame]): Sheets as read from the workbook.
+        raw (dict[str, pandas.DataFrame]): Sheets as read from the
+            workbook.
 
     Returns:
-        dict[str, pandas.DataFrame]: Cleaned sheets, keyed by sheet name.
+        dict[str, pandas.DataFrame]: Cleaned sheets, keyed by sheet
+        name.
     """
     tables = {name: frame.copy() for name, frame in raw.items()}
 

@@ -39,7 +39,8 @@ def _join(left, right, on, label, required):
         right (pandas.DataFrame): One side; ``on`` must be unique here.
         on (str): Join key.
         label (str): Join name used in error messages.
-        required (list[str]): Columns from ``right`` that must be filled.
+        required (list[str]): Columns from ``right`` that must be
+            filled.
 
     Returns:
         pandas.DataFrame: Joined table with the same rows as ``left``.
@@ -63,7 +64,8 @@ def build_model(tables, config):
     Args:
         tables (dict[str, pandas.DataFrame]): Output of
             ``northwind.clean.clean_tables``.
-        config (northwind.config.Config): Cutoff, windows and region maps.
+        config (northwind.config.Config): Cutoff, windows and region
+            maps.
 
     Returns:
         Model: Order lines, orders, products and customers.

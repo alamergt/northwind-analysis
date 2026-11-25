@@ -346,6 +346,14 @@ Each question section also has **one compact decision table**: the market scorec
 2. **Executive summary:** three findings and three recommended actions.
 3. **Data and caveats:** what the data covers and the six caveats.
 4. **Q1, Q2 and Q3 sections** (redesigned for executives at gate 5), each laid out the same way: **question → why it matters** (one sentence) **→ key finding** (highlighted) **→ one primary chart** (visible title, labelled axes with units, legends) **→ business interpretation** (one or two sentences) **→ recommended action** (highlighted, 2–3 items). Three expandable sections follow: *supporting chart and detailed table*, *full interpretation*, and *how this was analysed* (method and caveat). The summary at the top reuses each section's key finding and actions, so the two never disagree.
+   - **Executive revisions (after publication review):**
+     - Summary cards show one large metric, one finding and one action each.
+     - A "Top three management priorities" section ranks actions across departments by certainty of evidence, money at stake and speed. It uses only confirmed actions.
+     - Every action is labelled *Confirmed*, *Tentative* or *To verify*, and names the first account or item to look at and the next step.
+     - Q1 has a "How to read this chart" guide for the axes and the six categories.
+     - Q2 shows the top 5 products with order quantities directly under the chart, plus how the list is chosen: urgency tier first, then monthly revenue at stake.
+     - A plain-English glossary is added, and chart text is about 2 points larger.
+     - A Q1 action is tentative if the market's share direction flips between periods, if the bootstrap check isn't conclusive, or if its concentration label depends on how dependence is measured.
    - **Q3 primary chart** became the late-dispatch rate by allowed window; the opportunity chart moved to the expandable section and shows processing only. Freight gaps that don't survive adjustment are labelled "No action" everywhere, so the page never recommends reviewing carrier rates while also saying the gap isn't supported.
 5. **Limitations and data needed next** (§11).
 6. **Technical appendix** (§5.2), collapsed by default.

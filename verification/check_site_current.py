@@ -30,8 +30,8 @@ def normalise(page):
         page (str): HTML document.
 
     Returns:
-        list[str]: Lines with the timestamp removed and each SVG replaced
-        by its aria-label.
+        list[str]: Lines with the timestamp removed and each SVG
+        replaced by its aria-label.
     """
     page = re.sub(r"Built \d{4}-\d{2}-\d{2} \d{2}:\d{2} UTC", "Built <time>", page)
     page = re.sub(r'<svg[^>]*aria-label="([^"]*)".*?</svg>', r"<svg \1>", page, flags=re.S)

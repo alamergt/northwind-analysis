@@ -1,5 +1,8 @@
-"""Q2: which active products purchasing should restock first
-(plan.md sections 3.3, 3.4 and 4)."""
+"""Q2: rank active products for restocking.
+
+Shows which products purchasing should restock first (plan.md
+sections 3.3, 3.4 and 4).
+"""
 
 import math
 from dataclasses import dataclass
@@ -25,11 +28,12 @@ class Q2Result:
             (appendix).
         shortlist (pandas.DataFrame): The top of the watch list shown on
             the main page.
-        headline (str): Catalogue-wide finding stated above the shortlist.
+        headline (str): Catalogue-wide finding stated above the
+            shortlist.
         no_reorder_rule (pandas.DataFrame): Active products with reorder
             level 0, with suggested levels.
-        discontinued_stock (pandas.DataFrame): Discontinued products that
-            still hold stock.
+        discontinued_stock (pandas.DataFrame): Discontinued products
+            that still hold stock.
         robustness (pandas.DataFrame): Critical/High membership under
             other demand windows (plan 8.3).
         tier_counts (dict[str, int]): Active products per tier.
@@ -77,6 +81,14 @@ def average_net_price(lines, config):
     recent = lines[(day >= start) & (day <= config.cutoff)]
 
     def per_unit(frame):
+        """Return net revenue per unit for each product.
+
+        Args:
+            frame (pandas.DataFrame): Order lines.
+
+        Returns:
+            pandas.Series: Net revenue / units, by ProductID.
+        """
         totals = frame.groupby("ProductID")[["NetRevenue", "Quantity"]].sum()
         return totals["NetRevenue"] / totals["Quantity"]
 
@@ -87,8 +99,8 @@ def pending_units(lines):
     """Return units on orders that have not been shipped, per product.
 
     Args:
-        lines (pandas.DataFrame): Order lines with ProductID, Quantity and
-            ShippedDate.
+        lines (pandas.DataFrame): Order lines with ProductID, Quantity
+            and ShippedDate.
 
     Returns:
         pandas.Series: Units waiting to ship, indexed by ProductID.

@@ -75,6 +75,40 @@ section.question { background: var(--card); border: 1px solid var(--line); borde
 .action ul { margin: 0; padding-left: 20px; }
 .action li { margin: 4px 0; font-weight: 500; }
 
+/* Metric cards, priorities, badges */
+.glance article .metric { font-size: 2.6rem; font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 4px; }
+.glance article .metric-label { font-size: 0.85rem; color: var(--muted); margin: 0 0 16px; }
+.glance article .card-action { font-size: 0.93rem; border-top: 1px solid var(--line); padding-top: 12px; margin-bottom: 16px; }
+.badge { display: inline-block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+         border-radius: 999px; padding: 2px 8px; margin-right: 6px; vertical-align: 1px; white-space: nowrap; }
+.badge.confirmed { background: var(--action-soft); color: var(--action); border: 1px solid var(--action); }
+.badge.tentative { background: var(--note-bg); color: var(--ink-2); border: 1px dashed var(--muted); }
+.badge.to-verify { background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); }
+section.priorities { margin: 0 0 72px; }
+.priorities ol { list-style: none; padding: 0; margin: 16px 0; display: grid; gap: 16px; }
+.priorities li { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px 24px;
+                 display: grid; grid-template-columns: 56px 1fr; gap: 4px 16px; }
+.priorities .rank { grid-row: span 3; font-size: 2.2rem; font-weight: 700; color: var(--accent); line-height: 1; }
+.priorities .owner { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 700; }
+.priorities h3 { margin: 0; font-size: 1.1rem; }
+.priorities p { margin: 0; font-size: 0.95rem; color: var(--ink-2); }
+.legend-note { font-size: 0.85rem; color: var(--muted); }
+.guide { background: var(--note-bg); border-radius: 12px; padding: 16px 20px; margin: -16px 0 32px; font-size: 0.92rem; }
+.guide p { margin: 0 0 12px; }
+.guide-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.guide-grid div { background: var(--card); border-radius: 8px; padding: 8px 10px; font-size: 0.85rem; }
+.guide-grid strong { display: block; }
+.guide-axis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; font-size: 0.75rem; color: var(--muted);
+              text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; text-align: center; }
+.buy { margin: -16px 0 32px; }
+.buy h3 { font-size: 1rem; margin: 0 0 4px; }
+.buy .how { font-size: 0.88rem; color: var(--ink-2); max-width: 70ch; }
+dl.glossary { display: grid; grid-template-columns: max-content 1fr; gap: 8px 20px; font-size: 0.93rem; }
+dl.glossary dt { font-weight: 600; }
+dl.glossary dd { margin: 0; color: var(--ink-2); }
+@media (max-width: 600px) { dl.glossary { grid-template-columns: 1fr; } dl.glossary dd { margin-bottom: 8px; }
+  .guide-grid, .guide-axis { grid-template-columns: 1fr; } .guide-axis { display: none; } }
+
 /* Charts */
 figure { margin: 8px 0 32px; }
 .chart-title { font-size: 1rem; margin: 0 0 12px; }
@@ -131,6 +165,8 @@ footer { margin-top: 72px; padding-top: 24px; border-top: 1px solid var(--line);
 </div>
 {% endmacro %}
 
+{% macro badge(status) %}<span class="badge {{ status|lower|replace(' ', '-') }}">{{ status }}</span>{% endmacro %}
+
 {% macro question(num, q, owner, heading, why, chart_title, caption, support_title, support_caption, table_caption, method) %}
 <section class="question" id="q{{ num }}" aria-labelledby="q{{ num }}-h">
   <p class="eyebrow">Question {{ num }} · {{ owner }}</p>
@@ -147,6 +183,7 @@ footer { margin-top: 72px; padding-top: 24px; border-top: 1px solid var(--line);
     <div class="chart">{{ q.main_chart | safe }}</div>
     <figcaption>{{ caption }}</figcaption>
   </figure>
+  {% if caller %}{{ caller() }}{% endif %}
 
   <div class="meaning">
     <span class="label">Business interpretation</span>
@@ -155,7 +192,7 @@ footer { margin-top: 72px; padding-top: 24px; border-top: 1px solid var(--line);
 
   <div class="callout action">
     <span class="label">Recommended action</span>
-    <ul>{% for a in q.actions %}<li>{{ a }}</li>{% endfor %}</ul>
+    <ul>{% for a in q.actions %}<li>{{ badge(a.status) }}{{ a.text }}</li>{% endfor %}</ul>
   </div>
 
   <details>
@@ -197,14 +234,32 @@ footer { margin-top: 72px; padding-top: 24px; border-top: 1px solid var(--line);
 {% for item in summary %}
   <article>
     <h3>{{ item.label }}</h3>
+    <p class="metric">{{ item.metric }}</p>
+    <p class="metric-label">{{ item.metric_label }}</p>
     <p>{{ item.finding }}</p>
-    <ul>{% for a in item.actions %}<li>{{ a }}</li>{% endfor %}</ul>
+    <p class="card-action">{{ badge(item.action.status) }}{{ item.action.text }}</p>
     <a href="#{{ item.anchor }}">See the evidence →</a>
   </article>
 {% endfor %}
 </section>
 
-{{ question(1, q1, "Sales leadership",
+<section class="priorities" aria-labelledby="prio-h">
+  <h2 id="prio-h">Top three management priorities</h2>
+  <p class="why">Ranked across departments by how certain the evidence is, how much money is at stake each month, and how quickly the step can be taken.</p>
+  <ol>
+  {% for p in priorities %}
+    <li>
+      <span class="rank">{{ p.rank }}</span>
+      <span class="owner">{{ p.owner }} · {{ badge(p.status) }}</span>
+      <h3>{{ p.title }}</h3>
+      <p>{{ p.why }} <strong>Next step:</strong> {{ p.next }}</p>
+    </li>
+  {% endfor %}
+  </ol>
+  <p class="legend-note">{{ badge("Confirmed") }}holds in every check we ran. {{ badge("Tentative") }}depends on which period is compared or isn't statistically clear: test it before committing resources. {{ badge("To verify") }}a lead to check before acting.</p>
+</section>
+
+{% call question(1, q1, "Sales leadership",
    "Which markets grew or declined, which accounts drove it, and where should sales attention go?",
    "Sales attention is limited. This shows where extra effort is likely to pay off, and where revenue hangs on a single customer.",
    "Where each market stands: share change against dependence on one customer",
@@ -212,9 +267,22 @@ footer { margin-top: 72px; padding-top: 24px; border-top: 1px solid var(--line);
    "Which accounts drove the change in the four largest markets",
    "The accounts whose revenue changed most in each focus market, in dollars.",
    "Market scorecard",
-   "Revenue is compared between the same two quarters a year apart (Q4 1996 + Q1 1997 against Q4 1997 + Q1 1998). Each market is measured on the change in its share of company revenue, so a market growing exactly as fast as the company scores 0%, and on its largest customer's share of the market. Outperforming means +15% or more relative to the company; underperforming means −10% or less; high concentration means one customer holds over 50%.") }}
+   "Revenue is compared between the same two quarters a year apart (Q4 1996 + Q1 1997 against Q4 1997 + Q1 1998). Each market is measured on the change in its share of company revenue, so a market growing exactly as fast as the company scores 0%, and on its largest customer's share of the market. Outperforming means +15% or more relative to the company; underperforming means −10% or less; high concentration means one customer holds over 50%.") %}
+  <div class="guide">
+    <p><strong>How to read this chart.</strong> <em>Across:</em> how the market's share of company revenue changed. Right of the +15% line it grew faster than the company; left of the −10% line it fell behind. <em>Up:</em> how much of the market's revenue comes from its single largest customer; above the 50% line, one customer holds most of it.</p>
+    <div class="guide-axis"><span>Losing ground</span><span>Keeping pace</span><span>Gaining ground</span></div>
+    <div class="guide-grid">
+      <div><strong>Rescue</strong>Losing ground and reliant on one customer: find out which account is the cause.</div>
+      <div><strong>Protect</strong>Keeping pace but reliant on one customer: look after that account.</div>
+      <div><strong>Broaden</strong>Growing, but on one customer: keep it and grow others.</div>
+      <div><strong>Diagnose</strong>Losing ground with a broad customer base: call the accounts that fell.</div>
+      <div><strong>Maintain</strong>Keeping pace with a broad base: no change needed.</div>
+      <div><strong>Invest</strong>Growing with a broad base: the best case for more sales effort.</div>
+    </div>
+  </div>
+{% endcall %}
 
-{{ question(2, q2, "Purchasing",
+{% call question(2, q2, "Purchasing",
    "Which active products should purchasing restock first?",
    "Stock-outs lose sales and over-ordering ties up cash. This tells purchasing what to order first.",
    "How urgent each product is: demand against months of stock left",
@@ -222,7 +290,13 @@ footer { margin-top: 72px; padding-top: 24px; border-top: 1px solid var(--line);
    "How far the top " ~ shortlist_size ~ " are from one month of stock",
    "Units available (in stock plus on order) against one month of recent demand; the gap is the least an order would need.",
    "Top " ~ shortlist_size ~ " restocking priorities (full ranking in the appendix)",
-   "Recent demand is units ordered in the last 90 days, as a monthly rate. Months of stock is stock divided by that rate. Critical: out of stock, or under half a month even counting stock on order. High: under a month on hand, with too little on order. Watch: below the reorder level, or thin cover without a reorder rule or with erratic demand. Within each tier, products are ranked by the monthly revenue at stake.") }}
+   "Recent demand is units ordered in the last 90 days, as a monthly rate. Months of stock is stock divided by that rate. Critical: out of stock, or under half a month even counting stock on order. High: under a month on hand, with too little on order. Watch: below the reorder level, or thin cover without a reorder rule or with erratic demand. Within each tier, products are ranked by the monthly revenue at stake.") %}
+  <div class="buy">
+    <h3>What to order first</h3>
+    <p class="how"><strong>How these products were chosen:</strong> every active product is first placed in an urgency tier by how many months of recent demand its stock covers (Critical, then High, Watch, OK). Within each tier, products are ranked by monthly revenue at stake (units sold per month × average price). These are the first {{ buy_list_size }}. The order range covers one month of demand at the long-run rate (low end) and at the recent peak rate (high end).</p>
+    {{ data_table(q2.buy_list, "Top " ~ buy_list_size ~ " products to order") }}
+  </div>
+{% endcall %}
 
 {{ question(3, q3, "Operations",
    "How do processing times and freight costs vary across shipments, and where are the biggest opportunities to improve logistics?",
@@ -243,6 +317,27 @@ footer { margin-top: 72px; padding-top: 24px; border-top: 1px solid var(--line);
     <li><strong>Timing of stock-outs:</strong> the stock snapshot is undated and there are no supplier lead times.</li>
   </ul>
   <p class="meta">Data that would close these gaps: product costs, carrier delivery dates, dated stock records, supplier lead times, sales territories and freight terms.</p>
+</section>
+
+<section class="plain" aria-labelledby="gloss-h">
+  <h2 id="gloss-h">Terms in plain English</h2>
+  <dl class="glossary">
+    <dt>Share of company revenue</dt><dd>A market's slice of all of Northwind's sales.</dd>
+    <dt>Relative to the company</dt><dd>Whether a market grew faster or slower than Northwind as a whole. 0% means it kept exactly the same slice.</dd>
+    <dt>Concentration</dt><dd>How much of a market's sales come from its single largest customer. Above 50%, losing that one customer would cost most of the market.</dd>
+    <dt>Months of stock</dt><dd>How long the stock on the shelf would last at the recent rate of sales.</dd>
+    <dt>Critical / High / Watch / OK</dt><dd>Urgency tiers. Critical: out of stock, or under two weeks even counting stock on order. High: under a month, with too little on order. Watch: below its reorder level or close to it. OK: nothing urgent.</dd>
+    <dt>Revenue at stake</dt><dd>A product's sales per month at recent demand: what's at risk if it runs out.</dd>
+    <dt>Possible shortage</dt><dd>More units are waiting on unshipped orders than are in stock. Worth checking; not a confirmed backorder.</dd>
+    <dt>Processing time</dt><dd>Days from the customer's order to the day Northwind sends it out.</dd>
+    <dt>Late dispatch</dt><dd>An order sent out after the date the customer asked for.</dd>
+    <dt>Slow order</dt><dd>One of the slowest 10% of orders (more than 18 days from order to dispatch).</dd>
+    <dt>Order-days</dt><dd>Extra days of waiting added up across orders: 10 orders each 2 days slower is 20 order-days.</dd>
+    <dt>Likely range</dt><dd>The range the true figure probably falls in, given how few orders there are (a 95% interval).</dd>
+    <dt>Adjusted comparison</dt><dd>A comparison that holds other things equal, such as order size and destination, so that like is compared with like (a regression).</dd>
+    <dt>Resampling check</dt><dd>Re-running the numbers many times on random reshuffles of the orders to see how much the result could move by chance (a bootstrap).</dd>
+    <dt>Confirmed / Tentative / To verify</dt><dd>Confirmed holds in every check; tentative depends on the period compared or isn't statistically clear; to verify is a lead to check before acting.</dd>
+  </dl>
 </section>
 
 <section class="plain" aria-labelledby="app-h">
